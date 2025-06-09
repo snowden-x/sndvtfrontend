@@ -11,4 +11,17 @@ export default defineConfig({
       "@": path.resolve(__dirname, "./src"),
     },
   },
+  server: {
+    host: '172.20.10.2',
+    port: 5173,
+    cors: true,
+    proxy: {
+      '/socket.io': {
+        target: 'ws://172.20.10.2:8000',
+        changeOrigin: true,
+        ws: true,
+        secure: false
+      }
+    }
+  }
 })

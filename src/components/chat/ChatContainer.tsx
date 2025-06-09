@@ -24,9 +24,15 @@ export function ChatContainer() {
 
   useEffect(() => {
     // Initialize socket connection
-    const newSocket = io('http://localhost:8000', {
-      transports: ['websocket'],
-      autoConnect: true
+    const newSocket = io('http://172.20.10.2:8000', {
+      transports: ['polling', 'websocket'],
+      path: '/socket.io',
+      autoConnect: true,
+      withCredentials: true,
+      reconnection: true,
+      reconnectionAttempts: 5,
+      reconnectionDelay: 1000,
+      timeout: 20000
     });
 
     // Socket event handlers
@@ -35,8 +41,8 @@ export function ChatContainer() {
       setIsConnected(true);
     });
 
-    newSocket.on('disconnect', () => {
-      console.log('Disconnected from WebSocket');
+    newSocket.on('connect_error', (error) => {
+      console.error('Connection error:', error);
       setIsConnected(false);
     });
 
