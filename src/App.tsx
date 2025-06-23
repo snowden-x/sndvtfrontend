@@ -1,16 +1,22 @@
-import { ChatContainer } from './components/chat/ChatContainer'
+import { RouterProvider, createRouter } from '@tanstack/react-router'
+
+// Import the generated route tree
+import { routeTree } from './routeTree.gen'
+
+// Create a new router instance
+const router = createRouter({ routeTree })
+
+// Register the router instance for type safety
+declare module '@tanstack/react-router' {
+  interface Register {
+    router: typeof router
+  }
+}
 
 function App() {
   return (
     <div className="min-h-screen bg-background">
-      <header className="border-b">
-        <div className="container mx-auto px-4 py-4">
-          <h1 className="text-2xl font-bold">Network Diagnostic Assistant</h1>
-        </div>
-      </header>
-      <main className="container mx-auto px-4 py-6">
-        <ChatContainer />
-      </main>
+      <RouterProvider router={router} />
     </div>
   )
 }
