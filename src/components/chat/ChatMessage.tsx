@@ -39,7 +39,7 @@ export const ChatMessage: React.FC<ChatMessageProps> = ({ message }) => {
     <div className={cn('flex items-start gap-3 mb-4', isUser ? 'justify-end' : '')}>
       {!isUser && (
         <Avatar className="w-8 h-8 flex-shrink-0">
-          <AvatarFallback className="bg-blue-500 text-white text-xs">AI</AvatarFallback>
+          <AvatarFallback className="bg-blue-500 text-white text-xs">N</AvatarFallback>
         </Avatar>
       )}
       <div

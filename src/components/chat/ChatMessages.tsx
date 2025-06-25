@@ -22,7 +22,7 @@ export const ChatMessages: React.FC<ChatMessagesProps> = ({ messages }) => {
       {messages.length === 0 ? (
         <div className="flex items-center justify-center h-full text-muted-foreground">
           <div className="text-center">
-            <div className="text-lg mb-2">👋 Welcome to AI Assistant</div>
+            <div className="text-lg mb-2">👋 Welcome</div>
             <p className="text-sm">Start a conversation by typing a message below.</p>
           </div>
         </div>

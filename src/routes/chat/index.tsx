@@ -211,7 +211,7 @@ function ChatComponent() {
       <Card className="flex flex-col h-full">
         <CardHeader className="py-4">
           <div className="flex items-center justify-between">
-            <CardTitle className="text-xl">AI Assistant</CardTitle>
+            <CardTitle className="text-xl">Nexus</CardTitle>
             <div className="flex items-center gap-2">
               {messages.length > 0 && (
                 <span className="text-xs bg-blue-100 text-blue-800 px-2 py-1 rounded-full">

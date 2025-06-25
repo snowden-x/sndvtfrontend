@@ -63,7 +63,7 @@ export const ChatInput: React.FC<ChatInputProps> = ({ onSendMessage, isSending }
       </form>
       {isSending && (
         <div className="text-xs text-muted-foreground mt-2 pl-12">
-          AI is typing...
+          Nexus is typing...
         </div>
       )}
     </div>
