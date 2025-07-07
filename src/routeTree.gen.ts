@@ -10,8 +10,10 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as DiscoveryIndexRouteImport } from './routes/discovery/index'
 import { Route as DevicesIndexRouteImport } from './routes/devices/index'
 import { Route as ChatIndexRouteImport } from './routes/chat/index'
+import { Route as DiscoveryScanRouteImport } from './routes/discovery/scan'
 import { Route as DevicesNewRouteImport } from './routes/devices/new'
 import { Route as DevicesDeviceIdRouteImport } from './routes/devices/$deviceId'
 import { Route as DevicesDeviceIdEditRouteImport } from './routes/devices/$deviceId.edit'
@@ -19,6 +21,11 @@ import { Route as DevicesDeviceIdEditRouteImport } from './routes/devices/$devic
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const DiscoveryIndexRoute = DiscoveryIndexRouteImport.update({
+  id: '/discovery/',
+  path: '/discovery/',
   getParentRoute: () => rootRouteImport,
 } as any)
 const DevicesIndexRoute = DevicesIndexRouteImport.update({
@@ -29,6 +36,11 @@ const DevicesIndexRoute = DevicesIndexRouteImport.update({
 const ChatIndexRoute = ChatIndexRouteImport.update({
   id: '/chat/',
   path: '/chat/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const DiscoveryScanRoute = DiscoveryScanRouteImport.update({
+  id: '/discovery/scan',
+  path: '/discovery/scan',
   getParentRoute: () => rootRouteImport,
 } as any)
 const DevicesNewRoute = DevicesNewRouteImport.update({
@@ -51,16 +63,20 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/devices/$deviceId': typeof DevicesDeviceIdRouteWithChildren
   '/devices/new': typeof DevicesNewRoute
+  '/discovery/scan': typeof DiscoveryScanRoute
   '/chat': typeof ChatIndexRoute
   '/devices': typeof DevicesIndexRoute
+  '/discovery': typeof DiscoveryIndexRoute
   '/devices/$deviceId/edit': typeof DevicesDeviceIdEditRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/devices/$deviceId': typeof DevicesDeviceIdRouteWithChildren
   '/devices/new': typeof DevicesNewRoute
+  '/discovery/scan': typeof DiscoveryScanRoute
   '/chat': typeof ChatIndexRoute
   '/devices': typeof DevicesIndexRoute
+  '/discovery': typeof DiscoveryIndexRoute
   '/devices/$deviceId/edit': typeof DevicesDeviceIdEditRoute
 }
 export interface FileRoutesById {
@@ -68,8 +84,10 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/devices/$deviceId': typeof DevicesDeviceIdRouteWithChildren
   '/devices/new': typeof DevicesNewRoute
+  '/discovery/scan': typeof DiscoveryScanRoute
   '/chat/': typeof ChatIndexRoute
   '/devices/': typeof DevicesIndexRoute
+  '/discovery/': typeof DiscoveryIndexRoute
   '/devices/$deviceId/edit': typeof DevicesDeviceIdEditRoute
 }
 export interface FileRouteTypes {
@@ -78,24 +96,30 @@ export interface FileRouteTypes {
     | '/'
     | '/devices/$deviceId'
     | '/devices/new'
+    | '/discovery/scan'
     | '/chat'
     | '/devices'
+    | '/discovery'
     | '/devices/$deviceId/edit'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
     | '/devices/$deviceId'
     | '/devices/new'
+    | '/discovery/scan'
     | '/chat'
     | '/devices'
+    | '/discovery'
     | '/devices/$deviceId/edit'
   id:
     | '__root__'
     | '/'
     | '/devices/$deviceId'
     | '/devices/new'
+    | '/discovery/scan'
     | '/chat/'
     | '/devices/'
+    | '/discovery/'
     | '/devices/$deviceId/edit'
   fileRoutesById: FileRoutesById
 }
@@ -103,8 +127,10 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   DevicesDeviceIdRoute: typeof DevicesDeviceIdRouteWithChildren
   DevicesNewRoute: typeof DevicesNewRoute
+  DiscoveryScanRoute: typeof DiscoveryScanRoute
   ChatIndexRoute: typeof ChatIndexRoute
   DevicesIndexRoute: typeof DevicesIndexRoute
+  DiscoveryIndexRoute: typeof DiscoveryIndexRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -114,6 +140,13 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/discovery/': {
+      id: '/discovery/'
+      path: '/discovery'
+      fullPath: '/discovery'
+      preLoaderRoute: typeof DiscoveryIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/devices/': {
@@ -128,6 +161,13 @@ declare module '@tanstack/react-router' {
       path: '/chat'
       fullPath: '/chat'
       preLoaderRoute: typeof ChatIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/discovery/scan': {
+      id: '/discovery/scan'
+      path: '/discovery/scan'
+      fullPath: '/discovery/scan'
+      preLoaderRoute: typeof DiscoveryScanRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/devices/new': {
@@ -170,8 +210,10 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   DevicesDeviceIdRoute: DevicesDeviceIdRouteWithChildren,
   DevicesNewRoute: DevicesNewRoute,
+  DiscoveryScanRoute: DiscoveryScanRoute,
   ChatIndexRoute: ChatIndexRoute,
   DevicesIndexRoute: DevicesIndexRoute,
+  DiscoveryIndexRoute: DiscoveryIndexRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

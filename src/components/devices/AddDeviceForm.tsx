@@ -39,6 +39,7 @@ const deviceTypes = [
   { value: 'access_point', label: 'Access Point', icon: IconWifi },
   { value: 'server', label: 'Server', icon: IconServer },
   { value: 'generic', label: 'Generic Device', icon: IconDeviceDesktop },
+  { value: 'unknown', label: 'Unknown Device', icon: IconDeviceDesktop },
 ]
 
 const protocols = [
@@ -59,7 +60,7 @@ const deviceFormSchema = z.object({
     },
     'Please enter a valid IP address or hostname'
   ),
-  device_type: z.enum(['router', 'switch', 'firewall', 'access_point', 'server', 'generic']),
+  device_type: z.enum(['router', 'switch', 'firewall', 'access_point', 'server', 'generic', 'unknown']),
   enabled_protocols: z.array(z.string()).min(1, 'At least one protocol must be selected'),
   description: z.string().optional(),
   timeout: z.number().min(1, 'Timeout must be at least 1 second').max(300, 'Timeout cannot exceed 300 seconds'),

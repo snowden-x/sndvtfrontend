@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
-import { Link } from '@tanstack/react-router'
-import { IconPlus, IconSearch, IconDeviceDesktop, IconWifi, IconServer, IconRouter } from '@tabler/icons-react'
+import { Link, useRouter, useLocation } from '@tanstack/react-router'
+import { IconPlus, IconSearch, IconDeviceDesktop, IconWifi, IconServer, IconRouter, IconRefresh } from '@tabler/icons-react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
@@ -30,6 +30,7 @@ const deviceTypeIcons = {
   access_point: IconWifi,
   server: IconServer,
   generic: IconDeviceDesktop,
+  unknown: IconDeviceDesktop,
 }
 
 const statusColors = {
@@ -41,12 +42,21 @@ const statusColors = {
 export function DeviceList() {
   const [devices, setDevices] = useState<Device[]>([])
   const [loading, setLoading] = useState(true)
+  const [refreshing, setRefreshing] = useState(false)
   const [searchTerm, setSearchTerm] = useState('')
   const [error, setError] = useState<string | null>(null)
+  const location = useLocation()
 
   useEffect(() => {
     fetchDevices()
   }, [])
+
+  // Refresh when location changes (e.g., when navigating back from device detail)
+  useEffect(() => {
+    if (!loading && location.pathname === '/devices') {
+      handleRefresh()
+    }
+  }, [location.pathname])
 
   const fetchDevices = async () => {
     try {
@@ -69,6 +79,30 @@ export function DeviceList() {
       }
     } finally {
       setLoading(false)
+    }
+  }
+
+  const handleRefresh = async () => {
+    try {
+      setRefreshing(true)
+      const response = await fetch('/api/devices/')
+      if (!response.ok) {
+        if (response.status === 0 || response.status >= 500) {
+          throw new Error('Backend server is not running. Please start the API server at localhost:8000')
+        }
+        throw new Error(`Failed to fetch devices: ${response.status} ${response.statusText}`)
+      }
+      const data = await response.json()
+      setDevices(data)
+      setError(null)
+    } catch (err) {
+      if (err instanceof TypeError && err.message.includes('fetch')) {
+        setError('Cannot connect to the backend server. Please make sure the API server is running on localhost:8000')
+      } else {
+        setError(err instanceof Error ? err.message : 'Failed to load devices')
+      }
+    } finally {
+      setRefreshing(false)
     }
   }
 
@@ -145,6 +179,10 @@ export function DeviceList() {
               <IconPlus className="h-4 w-4 mr-2" />
               Add Device
             </Link>
+          </Button>
+          <Button onClick={handleRefresh} variant="outline" disabled={refreshing}>
+            <IconRefresh className={`h-4 w-4 mr-2 ${refreshing ? 'animate-spin' : ''}`} />
+            Refresh
           </Button>
         </div>
       </div>

@@ -106,12 +106,13 @@ import {
 
 export const schema = z.object({
   id: z.number(),
-  header: z.string(),
-  type: z.string(),
+  device_name: z.string(),
+  ip_address: z.string(),
+  device_type: z.string(),
   status: z.string(),
-  target: z.string(),
-  limit: z.string(),
-  reviewer: z.string(),
+  response_time: z.string(),
+  open_ports: z.string(),
+  last_seen: z.string(),
 })
 
 // Create a separate component for the drag handle
@@ -167,21 +168,30 @@ const columns: ColumnDef<z.infer<typeof schema>>[] = [
     enableHiding: false,
   },
   {
-    accessorKey: "header",
-    header: "Header",
+    accessorKey: "device_name",
+    header: "Device Name",
     cell: ({ row }) => {
       return <TableCellViewer item={row.original} />
     },
     enableHiding: false,
   },
   {
-    accessorKey: "type",
-    header: "Section Type",
+    accessorKey: "device_type",
+    header: "Device Type",
     cell: ({ row }) => (
       <div className="w-32">
         <Badge variant="outline" className="text-muted-foreground px-1.5">
-          {row.original.type}
+          {row.original.device_type}
         </Badge>
+      </div>
+    ),
+  },
+  {
+    accessorKey: "response_time",
+    header: "Response Time",
+    cell: ({ row }) => (
+      <div className="text-right font-mono text-sm">
+        {row.original.response_time}
       </div>
     ),
   },
@@ -189,86 +199,97 @@ const columns: ColumnDef<z.infer<typeof schema>>[] = [
     accessorKey: "status",
     header: "Status",
     cell: ({ row }) => (
-      <Badge variant="outline" className="text-muted-foreground px-1.5">
-        {row.original.status === "Done" ? (
-          <IconCircleCheckFilled className="fill-green-500 dark:fill-green-400" />
+      <Badge 
+        variant="outline" 
+        className={`px-1.5 ${
+          row.original.status === "Online" 
+            ? "text-green-600 border-green-300" 
+            : row.original.status === "Offline" 
+            ? "text-red-600 border-red-300" 
+            : "text-yellow-600 border-yellow-300"
+        }`}
+      >
+        {row.original.status === "Online" ? (
+          <IconCircleCheckFilled className="fill-green-500 dark:fill-green-400 mr-1" />
+        ) : row.original.status === "Offline" ? (
+          <div className="w-2 h-2 bg-red-500 rounded-full mr-1"></div>
         ) : (
-          <IconLoader />
+          <div className="w-2 h-2 bg-yellow-500 rounded-full mr-1"></div>
         )}
         {row.original.status}
       </Badge>
     ),
   },
   {
-    accessorKey: "target",
-    header: () => <div className="w-full text-right">Target</div>,
+    accessorKey: "ip_address",
+    header: () => <div className="w-full text-right">IP Address</div>,
     cell: ({ row }) => (
       <form
         onSubmit={(e) => {
           e.preventDefault()
           toast.promise(new Promise((resolve) => setTimeout(resolve, 1000)), {
-            loading: `Saving ${row.original.header}`,
+            loading: `Saving ${row.original.device_name}`,
             success: "Done",
             error: "Error",
           })
         }}
       >
-        <Label htmlFor={`${row.original.id}-target`} className="sr-only">
-          Target
+        <Label htmlFor={`${row.original.id}-ip_address`} className="sr-only">
+          IP Address
         </Label>
         <Input
           className="hover:bg-input/30 focus-visible:bg-background dark:hover:bg-input/30 dark:focus-visible:bg-input/30 h-8 w-16 border-transparent bg-transparent text-right shadow-none focus-visible:border dark:bg-transparent"
-          defaultValue={row.original.target}
-          id={`${row.original.id}-target`}
+          defaultValue={row.original.ip_address}
+          id={`${row.original.id}-ip_address`}
         />
       </form>
     ),
   },
   {
-    accessorKey: "limit",
-    header: () => <div className="w-full text-right">Limit</div>,
+    accessorKey: "open_ports",
+    header: () => <div className="w-full text-right">Open Ports</div>,
     cell: ({ row }) => (
       <form
         onSubmit={(e) => {
           e.preventDefault()
           toast.promise(new Promise((resolve) => setTimeout(resolve, 1000)), {
-            loading: `Saving ${row.original.header}`,
+            loading: `Saving ${row.original.device_name}`,
             success: "Done",
             error: "Error",
           })
         }}
       >
-        <Label htmlFor={`${row.original.id}-limit`} className="sr-only">
-          Limit
+        <Label htmlFor={`${row.original.id}-open_ports`} className="sr-only">
+          Open Ports
         </Label>
         <Input
           className="hover:bg-input/30 focus-visible:bg-background dark:hover:bg-input/30 dark:focus-visible:bg-input/30 h-8 w-16 border-transparent bg-transparent text-right shadow-none focus-visible:border dark:bg-transparent"
-          defaultValue={row.original.limit}
-          id={`${row.original.id}-limit`}
+          defaultValue={row.original.open_ports}
+          id={`${row.original.id}-open_ports`}
         />
       </form>
     ),
   },
   {
-    accessorKey: "reviewer",
-    header: "Reviewer",
+    accessorKey: "last_seen",
+    header: "Last Seen",
     cell: ({ row }) => {
-      const isAssigned = row.original.reviewer !== "Assign reviewer"
+      const isAssigned = row.original.last_seen !== "Assign reviewer"
 
       if (isAssigned) {
-        return row.original.reviewer
+        return row.original.last_seen
       }
 
       return (
         <>
-          <Label htmlFor={`${row.original.id}-reviewer`} className="sr-only">
-            Reviewer
+          <Label htmlFor={`${row.original.id}-last_seen`} className="sr-only">
+            Last Seen
           </Label>
           <Select>
             <SelectTrigger
               className="w-38 **:data-[slot=select-value]:block **:data-[slot=select-value]:truncate"
               size="sm"
-              id={`${row.original.id}-reviewer`}
+              id={`${row.original.id}-last_seen`}
             >
               <SelectValue placeholder="Assign reviewer" />
             </SelectTrigger>
@@ -652,12 +673,12 @@ function TableCellViewer({ item }: { item: z.infer<typeof schema> }) {
     <Drawer direction={isMobile ? "bottom" : "right"}>
       <DrawerTrigger asChild>
         <Button variant="link" className="text-foreground w-fit px-0 text-left">
-          {item.header}
+          {item.device_name}
         </Button>
       </DrawerTrigger>
       <DrawerContent>
         <DrawerHeader className="gap-1">
-          <DrawerTitle>{item.header}</DrawerTitle>
+          <DrawerTitle>{item.device_name}</DrawerTitle>
           <DrawerDescription>
             Showing total visitors for the last 6 months
           </DrawerDescription>
@@ -722,14 +743,14 @@ function TableCellViewer({ item }: { item: z.infer<typeof schema> }) {
           )}
           <form className="flex flex-col gap-4">
             <div className="flex flex-col gap-3">
-              <Label htmlFor="header">Header</Label>
-              <Input id="header" defaultValue={item.header} />
+              <Label htmlFor="device_name">Device Name</Label>
+              <Input id="device_name" defaultValue={item.device_name} />
             </div>
             <div className="grid grid-cols-2 gap-4">
               <div className="flex flex-col gap-3">
-                <Label htmlFor="type">Type</Label>
-                <Select defaultValue={item.type}>
-                  <SelectTrigger id="type" className="w-full">
+                <Label htmlFor="device_type">Device Type</Label>
+                <Select defaultValue={item.device_type}>
+                  <SelectTrigger id="device_type" className="w-full">
                     <SelectValue placeholder="Select a type" />
                   </SelectTrigger>
                   <SelectContent>
@@ -768,18 +789,18 @@ function TableCellViewer({ item }: { item: z.infer<typeof schema> }) {
             </div>
             <div className="grid grid-cols-2 gap-4">
               <div className="flex flex-col gap-3">
-                <Label htmlFor="target">Target</Label>
-                <Input id="target" defaultValue={item.target} />
+                <Label htmlFor="ip_address">IP Address</Label>
+                <Input id="ip_address" defaultValue={item.ip_address} />
               </div>
               <div className="flex flex-col gap-3">
-                <Label htmlFor="limit">Limit</Label>
-                <Input id="limit" defaultValue={item.limit} />
+                <Label htmlFor="open_ports">Open Ports</Label>
+                <Input id="open_ports" defaultValue={item.open_ports} />
               </div>
             </div>
             <div className="flex flex-col gap-3">
-              <Label htmlFor="reviewer">Reviewer</Label>
-              <Select defaultValue={item.reviewer}>
-                <SelectTrigger id="reviewer" className="w-full">
+              <Label htmlFor="last_seen">Last Seen</Label>
+              <Select defaultValue={item.last_seen}>
+                <SelectTrigger id="last_seen" className="w-full">
                   <SelectValue placeholder="Select a reviewer" />
                 </SelectTrigger>
                 <SelectContent>

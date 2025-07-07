@@ -69,6 +69,7 @@ const deviceTypeIcons = {
   access_point: IconWifi,
   server: IconServer,
   generic: IconDeviceDesktop,
+  unknown: IconDeviceDesktop,
 }
 
 interface DeviceDetailProps {
@@ -91,7 +92,7 @@ export function DeviceDetail({ deviceId }: DeviceDetailProps) {
 
   const fetchDevice = async () => {
     try {
-      const response = await fetch(`/api/devices/${deviceId}`)
+              const response = await fetch(`/api/devices/${deviceId}`)
       if (!response.ok) {
         if (response.status === 404) {
           throw new Error('Device not found')
@@ -116,7 +117,7 @@ export function DeviceDetail({ deviceId }: DeviceDetailProps) {
 
   const fetchDeviceStatus = async () => {
     try {
-      const response = await fetch(`/api/devices/${deviceId}/status`)
+              const response = await fetch(`/api/devices/${deviceId}/status`)
       if (response.ok) {
         const data = await response.json()
         setStatus(data)
@@ -129,7 +130,7 @@ export function DeviceDetail({ deviceId }: DeviceDetailProps) {
   const handlePing = async () => {
     setPinging(true)
     try {
-      const response = await fetch(`/api/devices/${deviceId}/ping`, {
+              const response = await fetch(`/api/devices/${deviceId}/ping`, {
         method: 'POST'
       })
       const result = await response.json()
@@ -154,6 +155,7 @@ export function DeviceDetail({ deviceId }: DeviceDetailProps) {
       })
       
       if (response.ok) {
+        // Navigate back to devices list
         router.navigate({ to: '/devices' })
       } else {
         throw new Error('Failed to delete device')

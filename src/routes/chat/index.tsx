@@ -10,7 +10,7 @@ export const Route = createFileRoute('/chat/')({
   component: ChatComponent,
 })
 
-const WEBSOCKET_URL = 'ws://localhost:8000/ws'
+const WEBSOCKET_URL = 'ws://localhost:8000/api/ws'
 
 function useChatSocket() {
   const [messages, setMessages] = useState<Message[]>([])
