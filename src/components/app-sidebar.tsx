@@ -3,14 +3,11 @@ import { Link } from "@tanstack/react-router"
 import {
   IconChartBar,
   IconDashboard,
-  IconDeviceDesktop,
   IconHelp,
   IconInnerShadowTop,
   IconMessageCircle,
-  IconPlus,
   IconSearch,
   IconSettings,
-  IconWifi,
 } from "@tabler/icons-react"
 
 import { NavDocuments } from "@/components/nav-documents"
@@ -46,26 +43,6 @@ const sidebarData = {
       icon: IconMessageCircle,
     },
     {
-      title: "Devices",
-      url: "/devices",
-      icon: IconDeviceDesktop,
-      items: [
-        {
-          title: "All Devices",
-          url: "/devices",
-        },
-        {
-          title: "Add Device",
-          url: "/devices/new",
-        },
-      ],
-    },
-    {
-      title: "Network Discovery",
-      url: "/discovery",
-      icon: IconWifi,
-    },
-    {
       title: "Analytics",
       url: "/analytics",
       icon: IconChartBar,
@@ -90,18 +67,7 @@ const sidebarData = {
     },
   ],
 
-  quickActions: [
-    {
-      name: "Add Device",
-      url: "/devices/new",
-      icon: IconPlus,
-    },
-    {
-      name: "Network Scan",
-      url: "/discovery/scan",
-      icon: IconWifi,
-    },
-  ],
+  quickActions: [],
 } as const
 
 export const AppSidebar = React.memo(function AppSidebar({ 

@@ -7,11 +7,7 @@ import { SidebarTrigger } from "@/components/ui/sidebar"
 // Helper function to get page title from pathname
 function getPageTitle(pathname: string): string {
   if (pathname === '/') return 'Dashboard'
-  if (pathname === '/devices') return 'Devices'
-  if (pathname === '/devices/new') return 'Add Device'
-  if (pathname.startsWith('/devices/') && pathname.endsWith('/edit')) return 'Edit Device'
-  if (pathname.startsWith('/devices/')) return 'Device Details'
-  if (pathname === '/discovery') return 'Network Discovery'
+  if (pathname === '/chat') return 'Chat'
   if (pathname === '/analytics') return 'Analytics'
   if (pathname === '/settings') return 'Settings'
   if (pathname === '/help') return 'Help & Support'

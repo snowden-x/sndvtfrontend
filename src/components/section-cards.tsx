@@ -1,4 +1,4 @@
-import { IconTrendingDown, IconTrendingUp, IconDevices, IconWifi, IconAlertTriangle, IconActivity } from "@tabler/icons-react"
+import { IconTrendingDown, IconTrendingUp, IconChartBar, IconServer, IconAlertTriangle, IconActivity } from "@tabler/icons-react"
 
 import { Badge } from "@/components/ui/badge"
 import {
@@ -15,86 +15,86 @@ export function SectionCards() {
     <div className="*:data-[slot=card]:from-primary/5 *:data-[slot=card]:to-card dark:*:data-[slot=card]:bg-card grid grid-cols-1 gap-4 px-4 *:data-[slot=card]:bg-gradient-to-t *:data-[slot=card]:shadow-xs lg:px-6 @xl/main:grid-cols-2 @5xl/main:grid-cols-4">
       <Card className="@container/card">
         <CardHeader>
-          <CardDescription>Total Devices</CardDescription>
+          <CardDescription>Monitoring Targets</CardDescription>
           <CardTitle className="text-2xl font-semibold tabular-nums @[250px]/card:text-3xl">
-            15
+            25
           </CardTitle>
           <CardAction>
             <Badge variant="outline">
-              <IconDevices />
-              +2 new
+              <IconServer />
+              Active
             </Badge>
           </CardAction>
         </CardHeader>
         <CardFooter className="flex-col items-start gap-1.5 text-sm">
           <div className="line-clamp-1 flex gap-2 font-medium">
-            Network devices discovered <IconDevices className="size-4" />
+            Prometheus targets monitored <IconServer className="size-4" />
           </div>
           <div className="text-muted-foreground">
-            Across 192.168.1.0/24 network
+            All SNMP endpoints responding
           </div>
         </CardFooter>
       </Card>
       <Card className="@container/card">
         <CardHeader>
-          <CardDescription>Online Devices</CardDescription>
+          <CardDescription>Metrics Collected</CardDescription>
           <CardTitle className="text-2xl font-semibold tabular-nums @[250px]/card:text-3xl">
-            13
+            1.2M
           </CardTitle>
           <CardAction>
             <Badge variant="outline">
-              <IconWifi />
-              86.7%
+              <IconChartBar />
+              Today
             </Badge>
           </CardAction>
         </CardHeader>
         <CardFooter className="flex-col items-start gap-1.5 text-sm">
           <div className="line-clamp-1 flex gap-2 font-medium">
-            Healthy network connectivity <IconWifi className="size-4" />
+            Data points collected <IconChartBar className="size-4" />
           </div>
           <div className="text-muted-foreground">
-            Strong uptime performance
+            High-resolution monitoring
           </div>
         </CardFooter>
       </Card>
       <Card className="@container/card">
         <CardHeader>
-          <CardDescription>Offline/Warning</CardDescription>
+          <CardDescription>Alerts Active</CardDescription>
           <CardTitle className="text-2xl font-semibold tabular-nums @[250px]/card:text-3xl">
-            2
+            3
           </CardTitle>
           <CardAction>
             <Badge variant="outline">
               <IconAlertTriangle />
-              13.3%
+              Warning
             </Badge>
           </CardAction>
         </CardHeader>
         <CardFooter className="flex-col items-start gap-1.5 text-sm">
           <div className="line-clamp-1 flex gap-2 font-medium">
-            Devices need attention <IconAlertTriangle className="size-4" />
+            Prometheus alerts firing <IconAlertTriangle className="size-4" />
           </div>
-          <div className="text-muted-foreground">backup-server, mail-server</div>
+          <div className="text-muted-foreground">High CPU usage detected</div>
         </CardFooter>
       </Card>
       <Card className="@container/card">
         <CardHeader>
-          <CardDescription>Avg Response Time</CardDescription>
+          <CardDescription>System Uptime</CardDescription>
           <CardTitle className="text-2xl font-semibold tabular-nums @[250px]/card:text-3xl">
-            2.3ms
+            99.8%
           </CardTitle>
           <CardAction>
             <Badge variant="outline">
               <IconTrendingUp />
-              Fast
+              Excellent
             </Badge>
           </CardAction>
         </CardHeader>
         <CardFooter className="flex-col items-start gap-1.5 text-sm">
           <div className="line-clamp-1 flex gap-2 font-medium">
-            Excellent network performance <IconActivity className="size-4" />
+            Monitoring stack availability <IconActivity className="size-4" />
           </div>
-          <div className="text-muted-foreground">All services responding well</div>
+          <div className="text-muted-foreground">Prometheus + Grafana stable</div>
         </CardFooter>
       </Card>
     </div>
