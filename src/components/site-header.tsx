@@ -3,6 +3,8 @@ import { useLocation } from "@tanstack/react-router"
 import { Button } from "@/components/ui/button"
 import { Separator } from "@/components/ui/separator"
 import { SidebarTrigger } from "@/components/ui/sidebar"
+import { UserProfile } from "@/components/auth/UserProfile"
+import { useAuth } from "@/contexts/AuthContext"
 
 // Helper function to get page title from pathname
 function getPageTitle(pathname: string): string {
@@ -21,6 +23,7 @@ function getPageTitle(pathname: string): string {
 export const SiteHeader = React.memo(function SiteHeader() {
   const location = useLocation()
   const pageTitle = getPageTitle(location.pathname)
+  const { isAuthenticated } = useAuth()
 
   return (
     <header className="flex h-(--header-height) shrink-0 items-center gap-2 border-b transition-[width,height] ease-linear group-has-data-[collapsible=icon]/sidebar-wrapper:h-(--header-height)">
@@ -31,7 +34,12 @@ export const SiteHeader = React.memo(function SiteHeader() {
           className="mx-2 data-[orientation=vertical]:h-4"
         />
         <h1 className="text-base font-medium">{pageTitle}</h1>
-
+        
+        {/* Spacer to push user profile to the right */}
+        <div className="flex-1" />
+        
+        {/* User profile - only show if authenticated */}
+        {isAuthenticated && <UserProfile />}
       </div>
     </header>
   )

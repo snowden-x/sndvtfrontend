@@ -4,9 +4,10 @@ import { toast } from 'sonner'
 import { ChatInput } from '@/components/chat/ChatInput'
 import { ChatMessages } from '@/components/chat/ChatMessages'
 import { type Message } from '@/components/chat/ChatMessage'
+import { AutomationStatus } from '@/components/chat/AutomationStatus'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 
-export const Route = createFileRoute('/chat/')({
+export const Route = createFileRoute('/_authenticated/chat/')({
   component: ChatComponent,
 })
 
@@ -16,6 +17,9 @@ function useChatSocket() {
   const [messages, setMessages] = useState<Message[]>([])
   const [isSending, setIsSending] = useState(false)
   const [isConnected, setIsConnected] = useState(false)
+  const [automationStatus, setAutomationStatus] = useState<'idle' | 'analyzing' | 'executing' | 'completed' | 'failed'>('idle')
+  const [currentAutomationStep, setCurrentAutomationStep] = useState<string>('')
+  const [currentTool, setCurrentTool] = useState<string>('')
   const ws = useRef<WebSocket | null>(null)
   const currentAiMessageId = useRef<string | null>(null)
   const processedMessageIds = useRef<Set<string>>(new Set())
@@ -69,13 +73,62 @@ function useChatSocket() {
           currentAiMessageId.current = aiMessageId
           processedMessageIds.current.clear()
           
+          // Check if this is an automation request
+          const isAutomation = received.content?.includes('tool') || received.content?.includes('investigate')
+          if (isAutomation) {
+            setAutomationStatus('analyzing')
+            setCurrentAutomationStep('Analyzing your request...')
+          }
+          
           const aiMessage: Message = {
             id: aiMessageId,
-            text: '',
+            text: received.content || '',
             sender: 'ai',
+            isAutomation: isAutomation
           }
           
           setMessages((prev) => [...prev, aiMessage])
+          return
+        }
+        
+        if (received.type === 'tool_result') {
+          // Automation tool execution result
+          setAutomationStatus('executing')
+          setCurrentTool(received.tool)
+          setCurrentAutomationStep(`Executing ${received.tool}...`)
+          
+          const toolMessage: Message = {
+            id: `tool-${Date.now()}`,
+            text: `🔧 **${received.tool}** executed\n\n${received.output}`,
+            sender: 'ai',
+            isAutomation: true,
+            toolResult: {
+              tool: received.tool,
+              success: received.success,
+              output: received.output,
+              data: received.data
+            }
+          }
+          
+          setMessages((prev) => [...prev, toolMessage])
+          return
+        }
+        
+        if (received.type === 'final_response') {
+          // Final AI interpretation of automation results
+          setAutomationStatus('completed')
+          setCurrentAutomationStep('Analysis complete')
+          
+          const finalMessage: Message = {
+            id: `final-${Date.now()}`,
+            text: received.content,
+            sender: 'ai',
+            isAutomation: true
+          }
+          
+          setMessages((prev) => [...prev, finalMessage])
+          setIsSending(false)
+          currentAiMessageId.current = null
           return
         }
         
@@ -181,6 +234,9 @@ function useChatSocket() {
       }
       setMessages((prev) => [...prev, userMessage])
       setIsSending(true)
+      setAutomationStatus('idle')
+      setCurrentAutomationStep('')
+      setCurrentTool('')
       currentAiMessageId.current = null
 
       // Prepare conversation history (exclude the current message we just added)
@@ -200,11 +256,27 @@ function useChatSocket() {
     }
   }
 
-  return { messages, isSending, sendMessage, isConnected }
+  return { 
+    messages, 
+    isSending, 
+    sendMessage, 
+    isConnected,
+    automationStatus,
+    currentAutomationStep,
+    currentTool
+  }
 }
 
 function ChatComponent() {
-  const { messages, isSending, sendMessage, isConnected } = useChatSocket()
+  const { 
+    messages, 
+    isSending, 
+    sendMessage, 
+    isConnected,
+    automationStatus,
+    currentAutomationStep,
+    currentTool
+  } = useChatSocket()
 
   return (
     <div className="flex flex-col h-[calc(100vh-2rem)]">
@@ -226,7 +298,18 @@ function ChatComponent() {
           </div>
         </CardHeader>
         <CardContent className="flex-1 flex flex-col min-h-0 p-0">
-          <ChatMessages messages={messages} />
+          {automationStatus !== 'idle' && (
+            <div className="p-4 border-b bg-orange-50">
+              <AutomationStatus
+                status={automationStatus}
+                currentStep={currentAutomationStep}
+                toolName={currentTool}
+              />
+            </div>
+          )}
+          <div className="flex-1 overflow-auto">
+            <ChatMessages messages={messages} />
+          </div>
           <ChatInput onSendMessage={sendMessage} isSending={!isConnected || isSending} />
         </CardContent>
       </Card>

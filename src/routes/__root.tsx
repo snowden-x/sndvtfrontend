@@ -7,6 +7,7 @@ import {
   SidebarInset,
   SidebarProvider,
 } from '@/components/ui/sidebar'
+import { AuthProvider } from '@/contexts/AuthContext'
 
 // Memoize the main content area
 const MainContent = React.memo(function MainContent() {
@@ -43,9 +44,9 @@ const SidebarLayout = React.memo(function SidebarLayout() {
 
 export const Route = createRootRoute({
   component: () => (
-    <>
+    <AuthProvider>
       <SidebarLayout />
       <TanStackRouterDevtools />
-    </>
+    </AuthProvider>
   ),
 }) 

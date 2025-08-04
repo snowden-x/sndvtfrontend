@@ -1,27 +1,31 @@
-import { createFileRoute } from '@tanstack/react-router'
-import { ChartAreaInteractive } from '@/components/chart-area-interactive'
-import { DataTable } from '@/components/data-table'
-import { SectionCards } from '@/components/section-cards'
-import { NetworkScanner } from '@/components/NetworkScanner'
-import data from '@/app/dashboard/data.json'
+import { createFileRoute, redirect } from '@tanstack/react-router'
+import { useAuth } from '@/contexts/AuthContext'
 
 export const Route = createFileRoute('/')({
-  component: Dashboard,
+  component: IndexRedirect,
+  beforeLoad: () => {
+    // This will be handled in the component since we need to check auth state
+  },
 })
 
-function Dashboard() {
-  return (
-    <div className="space-y-6">
-      <SectionCards />
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <div>
-          <ChartAreaInteractive />
-        </div>
-        <div>
-          <NetworkScanner />
-        </div>
+function IndexRedirect() {
+  const { isAuthenticated, isLoading } = useAuth()
+  
+  // Show loading while checking authentication
+  if (isLoading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-gray-900"></div>
       </div>
-      <DataTable data={data} />
-    </div>
-  )
+    )
+  }
+  
+  // Redirect based on authentication status
+  if (isAuthenticated) {
+    window.location.href = '/dashboard'
+  } else {
+    window.location.href = '/login'
+  }
+  
+  return null
 } 
