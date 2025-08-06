@@ -1,5 +1,7 @@
-import React, { createContext, useContext, useEffect, useState, ReactNode } from 'react'
+import { createContext, useContext, useEffect, useState } from 'react'
+import type { ReactNode } from 'react'
 import axios from 'axios'
+import { apiClient } from '@/lib/api'
 
 export interface User {
   id: number
@@ -115,6 +117,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
             accessToken: storedAccessToken,
             refreshToken: storedRefreshToken,
           })
+          
+          // Sync with API client
+          apiClient.setAuthToken(storedAccessToken)
 
           // Verify token is still valid by fetching user info
           try {
@@ -164,6 +169,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         accessToken: access_token,
         refreshToken: refresh_token,
       })
+      
+      // Sync with API client
+      apiClient.setAuthToken(access_token)
     } catch (error) {
       console.error('Login error:', error)
       throw new Error('Login failed. Please check your credentials.')
@@ -230,6 +238,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       accessToken: null,
       refreshToken: null,
     })
+    
+    // Clear API client token
+    apiClient.setAuthToken('')
   }
 
   const refreshAuth = async (): Promise<void> => {
@@ -263,6 +274,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         accessToken: access_token,
         refreshToken: refresh_token,
       })
+      
+      // Sync with API client
+      apiClient.setAuthToken(access_token)
     } catch (error) {
       console.error('Token refresh error:', error)
       logout()

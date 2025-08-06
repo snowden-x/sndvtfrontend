@@ -12,8 +12,15 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as AuthenticatedRouteImport } from './routes/_authenticated'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as AuthenticatedDebugRouteImport } from './routes/_authenticated/debug'
 import { Route as AuthenticatedDashboardRouteImport } from './routes/_authenticated/dashboard'
+import { Route as AuthenticatedNetworkRouteRouteImport } from './routes/_authenticated/network/route'
+import { Route as AuthenticatedAlertsRouteRouteImport } from './routes/_authenticated/alerts/route'
 import { Route as AuthenticatedChatIndexRouteImport } from './routes/_authenticated/chat/index'
+import { Route as AuthenticatedAlertsIndexRouteImport } from './routes/_authenticated/alerts/index'
+import { Route as AuthenticatedNetworkDevicesRouteImport } from './routes/_authenticated/network/devices'
+import { Route as AuthenticatedNetworkChatRouteImport } from './routes/_authenticated/network/chat'
+import { Route as AuthenticatedAlertsAlertIdRouteImport } from './routes/_authenticated/alerts/$alertId'
 import { Route as AuthenticatedAdminUsersRouteImport } from './routes/_authenticated/admin/users'
 
 const LoginRoute = LoginRouteImport.update({
@@ -30,16 +37,57 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AuthenticatedDebugRoute = AuthenticatedDebugRouteImport.update({
+  id: '/debug',
+  path: '/debug',
+  getParentRoute: () => AuthenticatedRoute,
+} as any)
 const AuthenticatedDashboardRoute = AuthenticatedDashboardRouteImport.update({
   id: '/dashboard',
   path: '/dashboard',
   getParentRoute: () => AuthenticatedRoute,
 } as any)
+const AuthenticatedNetworkRouteRoute =
+  AuthenticatedNetworkRouteRouteImport.update({
+    id: '/network',
+    path: '/network',
+    getParentRoute: () => AuthenticatedRoute,
+  } as any)
+const AuthenticatedAlertsRouteRoute =
+  AuthenticatedAlertsRouteRouteImport.update({
+    id: '/alerts',
+    path: '/alerts',
+    getParentRoute: () => AuthenticatedRoute,
+  } as any)
 const AuthenticatedChatIndexRoute = AuthenticatedChatIndexRouteImport.update({
   id: '/chat/',
   path: '/chat/',
   getParentRoute: () => AuthenticatedRoute,
 } as any)
+const AuthenticatedAlertsIndexRoute =
+  AuthenticatedAlertsIndexRouteImport.update({
+    id: '/',
+    path: '/',
+    getParentRoute: () => AuthenticatedAlertsRouteRoute,
+  } as any)
+const AuthenticatedNetworkDevicesRoute =
+  AuthenticatedNetworkDevicesRouteImport.update({
+    id: '/devices',
+    path: '/devices',
+    getParentRoute: () => AuthenticatedNetworkRouteRoute,
+  } as any)
+const AuthenticatedNetworkChatRoute =
+  AuthenticatedNetworkChatRouteImport.update({
+    id: '/chat',
+    path: '/chat',
+    getParentRoute: () => AuthenticatedNetworkRouteRoute,
+  } as any)
+const AuthenticatedAlertsAlertIdRoute =
+  AuthenticatedAlertsAlertIdRouteImport.update({
+    id: '/$alertId',
+    path: '/$alertId',
+    getParentRoute: () => AuthenticatedAlertsRouteRoute,
+  } as any)
 const AuthenticatedAdminUsersRoute = AuthenticatedAdminUsersRouteImport.update({
   id: '/admin/users',
   path: '/admin/users',
@@ -49,15 +97,28 @@ const AuthenticatedAdminUsersRoute = AuthenticatedAdminUsersRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/login': typeof LoginRoute
+  '/alerts': typeof AuthenticatedAlertsRouteRouteWithChildren
+  '/network': typeof AuthenticatedNetworkRouteRouteWithChildren
   '/dashboard': typeof AuthenticatedDashboardRoute
+  '/debug': typeof AuthenticatedDebugRoute
   '/admin/users': typeof AuthenticatedAdminUsersRoute
+  '/alerts/$alertId': typeof AuthenticatedAlertsAlertIdRoute
+  '/network/chat': typeof AuthenticatedNetworkChatRoute
+  '/network/devices': typeof AuthenticatedNetworkDevicesRoute
+  '/alerts/': typeof AuthenticatedAlertsIndexRoute
   '/chat': typeof AuthenticatedChatIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/login': typeof LoginRoute
+  '/network': typeof AuthenticatedNetworkRouteRouteWithChildren
   '/dashboard': typeof AuthenticatedDashboardRoute
+  '/debug': typeof AuthenticatedDebugRoute
   '/admin/users': typeof AuthenticatedAdminUsersRoute
+  '/alerts/$alertId': typeof AuthenticatedAlertsAlertIdRoute
+  '/network/chat': typeof AuthenticatedNetworkChatRoute
+  '/network/devices': typeof AuthenticatedNetworkDevicesRoute
+  '/alerts': typeof AuthenticatedAlertsIndexRoute
   '/chat': typeof AuthenticatedChatIndexRoute
 }
 export interface FileRoutesById {
@@ -65,22 +126,59 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/_authenticated': typeof AuthenticatedRouteWithChildren
   '/login': typeof LoginRoute
+  '/_authenticated/alerts': typeof AuthenticatedAlertsRouteRouteWithChildren
+  '/_authenticated/network': typeof AuthenticatedNetworkRouteRouteWithChildren
   '/_authenticated/dashboard': typeof AuthenticatedDashboardRoute
+  '/_authenticated/debug': typeof AuthenticatedDebugRoute
   '/_authenticated/admin/users': typeof AuthenticatedAdminUsersRoute
+  '/_authenticated/alerts/$alertId': typeof AuthenticatedAlertsAlertIdRoute
+  '/_authenticated/network/chat': typeof AuthenticatedNetworkChatRoute
+  '/_authenticated/network/devices': typeof AuthenticatedNetworkDevicesRoute
+  '/_authenticated/alerts/': typeof AuthenticatedAlertsIndexRoute
   '/_authenticated/chat/': typeof AuthenticatedChatIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/login' | '/dashboard' | '/admin/users' | '/chat'
+  fullPaths:
+    | '/'
+    | '/login'
+    | '/alerts'
+    | '/network'
+    | '/dashboard'
+    | '/debug'
+    | '/admin/users'
+    | '/alerts/$alertId'
+    | '/network/chat'
+    | '/network/devices'
+    | '/alerts/'
+    | '/chat'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/login' | '/dashboard' | '/admin/users' | '/chat'
+  to:
+    | '/'
+    | '/login'
+    | '/network'
+    | '/dashboard'
+    | '/debug'
+    | '/admin/users'
+    | '/alerts/$alertId'
+    | '/network/chat'
+    | '/network/devices'
+    | '/alerts'
+    | '/chat'
   id:
     | '__root__'
     | '/'
     | '/_authenticated'
     | '/login'
+    | '/_authenticated/alerts'
+    | '/_authenticated/network'
     | '/_authenticated/dashboard'
+    | '/_authenticated/debug'
     | '/_authenticated/admin/users'
+    | '/_authenticated/alerts/$alertId'
+    | '/_authenticated/network/chat'
+    | '/_authenticated/network/devices'
+    | '/_authenticated/alerts/'
     | '/_authenticated/chat/'
   fileRoutesById: FileRoutesById
 }
@@ -113,11 +211,32 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/_authenticated/debug': {
+      id: '/_authenticated/debug'
+      path: '/debug'
+      fullPath: '/debug'
+      preLoaderRoute: typeof AuthenticatedDebugRouteImport
+      parentRoute: typeof AuthenticatedRoute
+    }
     '/_authenticated/dashboard': {
       id: '/_authenticated/dashboard'
       path: '/dashboard'
       fullPath: '/dashboard'
       preLoaderRoute: typeof AuthenticatedDashboardRouteImport
+      parentRoute: typeof AuthenticatedRoute
+    }
+    '/_authenticated/network': {
+      id: '/_authenticated/network'
+      path: '/network'
+      fullPath: '/network'
+      preLoaderRoute: typeof AuthenticatedNetworkRouteRouteImport
+      parentRoute: typeof AuthenticatedRoute
+    }
+    '/_authenticated/alerts': {
+      id: '/_authenticated/alerts'
+      path: '/alerts'
+      fullPath: '/alerts'
+      preLoaderRoute: typeof AuthenticatedAlertsRouteRouteImport
       parentRoute: typeof AuthenticatedRoute
     }
     '/_authenticated/chat/': {
@@ -126,6 +245,34 @@ declare module '@tanstack/react-router' {
       fullPath: '/chat'
       preLoaderRoute: typeof AuthenticatedChatIndexRouteImport
       parentRoute: typeof AuthenticatedRoute
+    }
+    '/_authenticated/alerts/': {
+      id: '/_authenticated/alerts/'
+      path: '/'
+      fullPath: '/alerts/'
+      preLoaderRoute: typeof AuthenticatedAlertsIndexRouteImport
+      parentRoute: typeof AuthenticatedAlertsRouteRoute
+    }
+    '/_authenticated/network/devices': {
+      id: '/_authenticated/network/devices'
+      path: '/devices'
+      fullPath: '/network/devices'
+      preLoaderRoute: typeof AuthenticatedNetworkDevicesRouteImport
+      parentRoute: typeof AuthenticatedNetworkRouteRoute
+    }
+    '/_authenticated/network/chat': {
+      id: '/_authenticated/network/chat'
+      path: '/chat'
+      fullPath: '/network/chat'
+      preLoaderRoute: typeof AuthenticatedNetworkChatRouteImport
+      parentRoute: typeof AuthenticatedNetworkRouteRoute
+    }
+    '/_authenticated/alerts/$alertId': {
+      id: '/_authenticated/alerts/$alertId'
+      path: '/$alertId'
+      fullPath: '/alerts/$alertId'
+      preLoaderRoute: typeof AuthenticatedAlertsAlertIdRouteImport
+      parentRoute: typeof AuthenticatedAlertsRouteRoute
     }
     '/_authenticated/admin/users': {
       id: '/_authenticated/admin/users'
@@ -137,14 +284,52 @@ declare module '@tanstack/react-router' {
   }
 }
 
+interface AuthenticatedAlertsRouteRouteChildren {
+  AuthenticatedAlertsAlertIdRoute: typeof AuthenticatedAlertsAlertIdRoute
+  AuthenticatedAlertsIndexRoute: typeof AuthenticatedAlertsIndexRoute
+}
+
+const AuthenticatedAlertsRouteRouteChildren: AuthenticatedAlertsRouteRouteChildren =
+  {
+    AuthenticatedAlertsAlertIdRoute: AuthenticatedAlertsAlertIdRoute,
+    AuthenticatedAlertsIndexRoute: AuthenticatedAlertsIndexRoute,
+  }
+
+const AuthenticatedAlertsRouteRouteWithChildren =
+  AuthenticatedAlertsRouteRoute._addFileChildren(
+    AuthenticatedAlertsRouteRouteChildren,
+  )
+
+interface AuthenticatedNetworkRouteRouteChildren {
+  AuthenticatedNetworkChatRoute: typeof AuthenticatedNetworkChatRoute
+  AuthenticatedNetworkDevicesRoute: typeof AuthenticatedNetworkDevicesRoute
+}
+
+const AuthenticatedNetworkRouteRouteChildren: AuthenticatedNetworkRouteRouteChildren =
+  {
+    AuthenticatedNetworkChatRoute: AuthenticatedNetworkChatRoute,
+    AuthenticatedNetworkDevicesRoute: AuthenticatedNetworkDevicesRoute,
+  }
+
+const AuthenticatedNetworkRouteRouteWithChildren =
+  AuthenticatedNetworkRouteRoute._addFileChildren(
+    AuthenticatedNetworkRouteRouteChildren,
+  )
+
 interface AuthenticatedRouteChildren {
+  AuthenticatedAlertsRouteRoute: typeof AuthenticatedAlertsRouteRouteWithChildren
+  AuthenticatedNetworkRouteRoute: typeof AuthenticatedNetworkRouteRouteWithChildren
   AuthenticatedDashboardRoute: typeof AuthenticatedDashboardRoute
+  AuthenticatedDebugRoute: typeof AuthenticatedDebugRoute
   AuthenticatedAdminUsersRoute: typeof AuthenticatedAdminUsersRoute
   AuthenticatedChatIndexRoute: typeof AuthenticatedChatIndexRoute
 }
 
 const AuthenticatedRouteChildren: AuthenticatedRouteChildren = {
+  AuthenticatedAlertsRouteRoute: AuthenticatedAlertsRouteRouteWithChildren,
+  AuthenticatedNetworkRouteRoute: AuthenticatedNetworkRouteRouteWithChildren,
   AuthenticatedDashboardRoute: AuthenticatedDashboardRoute,
+  AuthenticatedDebugRoute: AuthenticatedDebugRoute,
   AuthenticatedAdminUsersRoute: AuthenticatedAdminUsersRoute,
   AuthenticatedChatIndexRoute: AuthenticatedChatIndexRoute,
 }

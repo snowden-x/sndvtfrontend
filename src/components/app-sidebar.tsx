@@ -9,7 +9,10 @@ import {
   IconSearch,
   IconSettings,
   IconUsers,
-  IconShield,
+
+  IconAlertTriangle,
+  IconNetwork,
+  IconActivity,
 } from "@tabler/icons-react"
 
 import { NavDocuments } from "@/components/nav-documents"
@@ -41,6 +44,26 @@ const sidebarData = {
       icon: IconDashboard,
     },
     {
+      title: "Alerts",
+      url: "/alerts",
+      icon: IconAlertTriangle,
+    },
+    {
+      title: "Network Tools",
+      url: "/network",
+      icon: IconNetwork,
+      items: [
+        {
+          title: "AI Troubleshooting",
+          url: "/network/chat",
+        },
+        {
+          title: "Device Management",
+          url: "/network/devices",
+        },
+      ],
+    },
+    {
       title: "Chat",
       url: "/chat",
       icon: IconMessageCircle,
@@ -57,6 +80,11 @@ const sidebarData = {
       title: "Settings",
       url: "/settings",
       icon: IconSettings,
+    },
+    {
+      title: "Debug",
+      url: "/debug",
+      icon: IconActivity,
     },
     {
       title: "Help & Support",
@@ -85,8 +113,8 @@ export const AppSidebar = React.memo(function AppSidebar({
     // Add admin section for superusers
     if (user?.is_superuser) {
       baseNavSecondary.unshift({
-        title: "User Management",
-        url: "/admin/users",
+        title: "User Management" as any,
+        url: "/admin/users" as any,
         icon: IconUsers,
       })
     }
@@ -112,9 +140,9 @@ export const AppSidebar = React.memo(function AppSidebar({
         </SidebarMenu>
       </SidebarHeader>
       <SidebarContent>
-        <NavMain items={sidebarData.navMain} />
-        <NavDocuments items={sidebarData.quickActions} />
-        <NavSecondary items={dynamicNavSecondary} className="mt-auto" />
+        <NavMain items={sidebarData.navMain as any} />
+        <NavDocuments items={sidebarData.quickActions as any} />
+        <NavSecondary items={dynamicNavSecondary as any} className="mt-auto" />
       </SidebarContent>
       <SidebarFooter>
         <NavUser user={sidebarData.user} />

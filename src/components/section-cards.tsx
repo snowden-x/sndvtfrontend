@@ -1,4 +1,4 @@
-import { IconTrendingDown, IconTrendingUp, IconChartBar, IconServer, IconAlertTriangle, IconActivity } from "@tabler/icons-react"
+import { IconTrendingUp, IconChartBar, IconServer, IconAlertTriangle, IconActivity } from "@tabler/icons-react"
 
 import { Badge } from "@/components/ui/badge"
 import {

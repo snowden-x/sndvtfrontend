@@ -1,20 +1,12 @@
-import React from 'react'
+
 import { createFileRoute, useRouter } from '@tanstack/react-router'
 import { LoginForm } from '@/components/auth/LoginForm'
-import { useAuth } from '@/contexts/AuthContext'
+
 
 export const Route = createFileRoute('/login')({
   component: LoginPage,
-  beforeLoad: ({ context }) => {
-    // Redirect if already authenticated
-    if (context.auth?.isAuthenticated) {
-      throw new Response('Redirect', {
-        status: 302,
-        headers: {
-          Location: '/dashboard',
-        },
-      })
-    }
+  beforeLoad: () => {
+    // Authentication check will be handled by the component
   },
 })
 

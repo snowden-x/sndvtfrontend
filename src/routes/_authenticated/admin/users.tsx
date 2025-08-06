@@ -1,8 +1,8 @@
-import React, { useState, useEffect } from 'react'
+import { useState, useEffect } from 'react'
 import { createFileRoute } from '@tanstack/react-router'
 import { Plus, Shield, User, UserCheck, UserX, Loader2 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+import { Card, CardContent } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Alert, AlertDescription } from '@/components/ui/alert'
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog'
@@ -12,7 +12,7 @@ import type { User as UserType } from '@/contexts/AuthContext'
 
 export const Route = createFileRoute('/_authenticated/admin/users')({
   component: AdminUsersPage,
-  beforeLoad: ({ context }) => {
+  beforeLoad: () => {
     // This should be checked in a real app - for now we'll check in component
   },
 })
