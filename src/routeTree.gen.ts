@@ -16,7 +16,6 @@ import { Route as AuthenticatedDebugRouteImport } from './routes/_authenticated/
 import { Route as AuthenticatedDashboardRouteImport } from './routes/_authenticated/dashboard'
 import { Route as AuthenticatedNetworkRouteRouteImport } from './routes/_authenticated/network/route'
 import { Route as AuthenticatedAlertsRouteRouteImport } from './routes/_authenticated/alerts/route'
-import { Route as AuthenticatedChatIndexRouteImport } from './routes/_authenticated/chat/index'
 import { Route as AuthenticatedAlertsIndexRouteImport } from './routes/_authenticated/alerts/index'
 import { Route as AuthenticatedNetworkDevicesRouteImport } from './routes/_authenticated/network/devices'
 import { Route as AuthenticatedNetworkChatRouteImport } from './routes/_authenticated/network/chat'
@@ -59,11 +58,6 @@ const AuthenticatedAlertsRouteRoute =
     path: '/alerts',
     getParentRoute: () => AuthenticatedRoute,
   } as any)
-const AuthenticatedChatIndexRoute = AuthenticatedChatIndexRouteImport.update({
-  id: '/chat/',
-  path: '/chat/',
-  getParentRoute: () => AuthenticatedRoute,
-} as any)
 const AuthenticatedAlertsIndexRoute =
   AuthenticatedAlertsIndexRouteImport.update({
     id: '/',
@@ -106,7 +100,6 @@ export interface FileRoutesByFullPath {
   '/network/chat': typeof AuthenticatedNetworkChatRoute
   '/network/devices': typeof AuthenticatedNetworkDevicesRoute
   '/alerts/': typeof AuthenticatedAlertsIndexRoute
-  '/chat': typeof AuthenticatedChatIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -119,7 +112,6 @@ export interface FileRoutesByTo {
   '/network/chat': typeof AuthenticatedNetworkChatRoute
   '/network/devices': typeof AuthenticatedNetworkDevicesRoute
   '/alerts': typeof AuthenticatedAlertsIndexRoute
-  '/chat': typeof AuthenticatedChatIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -135,7 +127,6 @@ export interface FileRoutesById {
   '/_authenticated/network/chat': typeof AuthenticatedNetworkChatRoute
   '/_authenticated/network/devices': typeof AuthenticatedNetworkDevicesRoute
   '/_authenticated/alerts/': typeof AuthenticatedAlertsIndexRoute
-  '/_authenticated/chat/': typeof AuthenticatedChatIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -151,7 +142,6 @@ export interface FileRouteTypes {
     | '/network/chat'
     | '/network/devices'
     | '/alerts/'
-    | '/chat'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -164,7 +154,6 @@ export interface FileRouteTypes {
     | '/network/chat'
     | '/network/devices'
     | '/alerts'
-    | '/chat'
   id:
     | '__root__'
     | '/'
@@ -179,7 +168,6 @@ export interface FileRouteTypes {
     | '/_authenticated/network/chat'
     | '/_authenticated/network/devices'
     | '/_authenticated/alerts/'
-    | '/_authenticated/chat/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -237,13 +225,6 @@ declare module '@tanstack/react-router' {
       path: '/alerts'
       fullPath: '/alerts'
       preLoaderRoute: typeof AuthenticatedAlertsRouteRouteImport
-      parentRoute: typeof AuthenticatedRoute
-    }
-    '/_authenticated/chat/': {
-      id: '/_authenticated/chat/'
-      path: '/chat'
-      fullPath: '/chat'
-      preLoaderRoute: typeof AuthenticatedChatIndexRouteImport
       parentRoute: typeof AuthenticatedRoute
     }
     '/_authenticated/alerts/': {
@@ -322,7 +303,6 @@ interface AuthenticatedRouteChildren {
   AuthenticatedDashboardRoute: typeof AuthenticatedDashboardRoute
   AuthenticatedDebugRoute: typeof AuthenticatedDebugRoute
   AuthenticatedAdminUsersRoute: typeof AuthenticatedAdminUsersRoute
-  AuthenticatedChatIndexRoute: typeof AuthenticatedChatIndexRoute
 }
 
 const AuthenticatedRouteChildren: AuthenticatedRouteChildren = {
@@ -331,7 +311,6 @@ const AuthenticatedRouteChildren: AuthenticatedRouteChildren = {
   AuthenticatedDashboardRoute: AuthenticatedDashboardRoute,
   AuthenticatedDebugRoute: AuthenticatedDebugRoute,
   AuthenticatedAdminUsersRoute: AuthenticatedAdminUsersRoute,
-  AuthenticatedChatIndexRoute: AuthenticatedChatIndexRoute,
 }
 
 const AuthenticatedRouteWithChildren = AuthenticatedRoute._addFileChildren(

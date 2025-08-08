@@ -20,11 +20,11 @@ function IndexRedirect() {
     )
   }
   
-  // Redirect based on authentication status
+  // Redirect based on authentication status using router navigation
   if (isAuthenticated) {
-    window.location.href = '/dashboard'
+    window.location.assign('/dashboard')
   } else {
-    window.location.href = '/login'
+    window.location.assign('/login')
   }
   
   return null

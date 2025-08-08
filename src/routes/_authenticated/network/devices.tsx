@@ -10,7 +10,8 @@ import {
   IconShield,
   IconDeviceDesktop,
   IconSearch,
-  IconActivity
+  IconActivity,
+  IconFilter
 } from '@tabler/icons-react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -29,13 +30,19 @@ function DevicesPage() {
   const [loading, setLoading] = useState(false)
   const [discovering, setDiscovering] = useState(false)
   const [searchQuery, setSearchQuery] = useState('')
+  const [typeFilter, setTypeFilter] = useState<string>('all')
+  const [statusFilter, setStatusFilter] = useState<string>('all')
   // Using Sonner toast
 
-  const filteredDevices = devices.filter(device =>
-    device.device_name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    device.ip_address?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    device.hostname?.toLowerCase().includes(searchQuery.toLowerCase())
-  )
+  const filteredDevices = devices.filter(device => {
+    const matchesText =
+      device.device_name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      device.ip_address?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      device.hostname?.toLowerCase().includes(searchQuery.toLowerCase())
+    const matchesType = typeFilter === 'all' || (device.device_type?.toLowerCase() === typeFilter)
+    const matchesStatus = statusFilter === 'all' || (statusFilter === 'online' ? device.is_reachable === 'reachable' : device.is_reachable !== 'reachable')
+    return matchesText && matchesType && matchesStatus
+  })
 
   const reachableDevices = devices.filter(d => d.is_reachable === 'reachable')
 
@@ -161,15 +168,31 @@ function DevicesPage() {
         </div>
       </div>
 
-      {/* Search */}
-      <div className="relative max-w-md">
-        <IconSearch className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
-        <Input
-          placeholder="Search devices..."
-          value={searchQuery}
-          onChange={(e) => setSearchQuery(e.target.value)}
-          className="pl-8"
-        />
+      {/* Search + Filters */}
+      <div className="flex flex-wrap gap-2 items-center">
+        <div className="relative max-w-md">
+          <IconSearch className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
+          <Input
+            placeholder="Search devices..."
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            className="pl-8"
+          />
+        </div>
+        <div className="flex items-center gap-2">
+          <IconFilter className="h-4 w-4 text-muted-foreground" />
+          <select className="border rounded-md px-2 py-1 text-sm bg-background" value={typeFilter} onChange={(e) => setTypeFilter(e.target.value)}>
+            <option value="all">All types</option>
+            <option value="router">Router</option>
+            <option value="switch">Switch</option>
+            <option value="firewall">Firewall</option>
+          </select>
+          <select className="border rounded-md px-2 py-1 text-sm bg-background" value={statusFilter} onChange={(e) => setStatusFilter(e.target.value)}>
+            <option value="all">Any status</option>
+            <option value="online">Online</option>
+            <option value="offline">Offline</option>
+          </select>
+        </div>
       </div>
 
       {/* Devices Grid */}

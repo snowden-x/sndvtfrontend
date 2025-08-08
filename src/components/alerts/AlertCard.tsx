@@ -12,27 +12,10 @@ import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Card, CardHeader, CardContent } from '@/components/ui/card'
 import { cn } from '@/lib/utils'
-
-interface Alert {
-  id: string
-  timestamp: string
-  probability: number
-  prediction: number
-  cause: string
-  device: string
-  interface?: string
-  severity: string
-  message: string
-  acknowledged: boolean
-  acknowledged_by?: string
-  acknowledged_at?: string
-  created_at: string
-  age_minutes: number
-  is_critical: boolean
-}
+import type { AlertWithUser } from '@/services/alerts'
 
 interface AlertCardProps {
-  alert: Alert
+  alert: AlertWithUser
   onAcknowledge?: (alertId: string) => void
   onViewDetails?: (alertId: string) => void
   className?: string
@@ -133,7 +116,12 @@ export function AlertCard({
             {alert.acknowledged ? (
               <div className="flex items-center gap-1 text-green-600">
                 <IconCheck className="h-3 w-3" />
-                <span className="text-xs">Acknowledged</span>
+                <span className="text-xs">
+                  {alert.acknowledged_by_user 
+                    ? `Acknowledged by ${alert.acknowledged_by_user.display_name}`
+                    : 'Acknowledged'
+                  }
+                </span>
               </div>
             ) : (
               <Button

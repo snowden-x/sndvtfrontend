@@ -13,6 +13,7 @@ import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Separator } from '@/components/ui/separator'
 import { toast } from 'sonner'
+import { alertsService } from '@/services/alerts'
 import { Link } from '@tanstack/react-router'
 import { formatDistanceToNow } from 'date-fns'
 
@@ -45,55 +46,33 @@ function AlertDetailsPage() {
   // Using Sonner toast
 
   useEffect(() => {
-    // Mock API call - replace with actual API
     const fetchAlert = async () => {
       setLoading(true)
       try {
-        // Simulate API delay
-        await new Promise(resolve => setTimeout(resolve, 1000))
-        
-        // Mock alert data
-        const mockAlert: Alert = {
-          id: alertId,
-          timestamp: new Date(Date.now() - 1000 * 60 * 30).toISOString(),
-          probability: 0.85,
-          prediction: 1,
-          cause: 'High CPU utilization',
-          device: 'Router-Core-01',
-          interface: 'GigabitEthernet0/1',
-          severity: 'critical',
-          message: 'Network device showing signs of potential failure within 30 minutes. CPU utilization has exceeded 90% for the past 15 minutes.',
-          acknowledged: false,
-          created_at: new Date(Date.now() - 1000 * 60 * 30).toISOString(),
-          age_minutes: 30,
-          is_critical: true
-        }
-        
-        setAlert(mockAlert)
+        const response = await alertsService.getAlert(alertId)
+        if (response.error) throw new Error(response.error)
+        if (response.data) setAlert(response.data as unknown as Alert)
       } catch (error) {
         toast.error("Failed to load alert details")
       } finally {
         setLoading(false)
       }
     }
-
     fetchAlert()
-  }, [alertId, toast])
+  }, [alertId])
 
   const handleAcknowledge = async () => {
     if (!alert) return
     
     try {
-      // Mock API call - replace with actual API
-      await new Promise(resolve => setTimeout(resolve, 500))
-      
+      const response = await alertsService.acknowledgeAlert(alert.id)
+      if (response.error) throw new Error(response.error)
       setAlert(prev => prev ? {
         ...prev,
         acknowledged: true,
-        acknowledged_by: 'current-user@company.com',
+        acknowledged_by: prev.acknowledged_by || 'You',
         acknowledged_at: new Date().toISOString()
       } : null)
-      
       toast.success("Alert acknowledged successfully")
     } catch (error) {
       toast.error("Failed to acknowledge alert")

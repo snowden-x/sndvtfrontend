@@ -9,27 +9,10 @@ import {
 
 } from '@tabler/icons-react'
 import { cn } from '@/lib/utils'
-
-interface Alert {
-  id: string
-  timestamp: string
-  probability: number
-  prediction: number
-  cause: string
-  device: string
-  interface?: string
-  severity: string
-  message: string
-  acknowledged: boolean
-  acknowledged_by?: string
-  acknowledged_at?: string
-  created_at: string
-  age_minutes: number
-  is_critical: boolean
-}
+import type { AlertWithUser } from '@/services/alerts'
 
 interface AlertsListProps {
-  alerts: Alert[]
+  alerts: AlertWithUser[]
   totalCount: number
   page: number
   pageSize: number

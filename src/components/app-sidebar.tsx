@@ -1,15 +1,9 @@
 import * as React from "react"
 import { Link } from "@tanstack/react-router"
 import {
-  IconChartBar,
   IconDashboard,
-  IconHelp,
   IconInnerShadowTop,
-  IconMessageCircle,
-  IconSearch,
-  IconSettings,
   IconUsers,
-
   IconAlertTriangle,
   IconNetwork,
   IconActivity,
@@ -40,7 +34,7 @@ const sidebarData = {
   navMain: [
     {
       title: "Dashboard",
-      url: "/",
+      url: "/dashboard",
       icon: IconDashboard,
     },
     {
@@ -63,38 +57,13 @@ const sidebarData = {
         },
       ],
     },
-    {
-      title: "Chat",
-      url: "/chat",
-      icon: IconMessageCircle,
-    },
-    {
-      title: "Analytics",
-      url: "/analytics",
-      icon: IconChartBar,
-    },
   ],
 
   navSecondary: [
     {
-      title: "Settings",
-      url: "/settings",
-      icon: IconSettings,
-    },
-    {
       title: "Debug",
       url: "/debug",
       icon: IconActivity,
-    },
-    {
-      title: "Help & Support",
-      url: "/help",
-      icon: IconHelp,
-    },
-    {
-      title: "Search",
-      url: "/search",
-      icon: IconSearch,
     },
   ],
 
@@ -141,7 +110,9 @@ export const AppSidebar = React.memo(function AppSidebar({
       </SidebarHeader>
       <SidebarContent>
         <NavMain items={sidebarData.navMain as any} />
-        <NavDocuments items={sidebarData.quickActions as any} />
+        {sidebarData.quickActions.length > 0 && (
+          <NavDocuments items={sidebarData.quickActions as any} />
+        )}
         <NavSecondary items={dynamicNavSecondary as any} className="mt-auto" />
       </SidebarContent>
       <SidebarFooter>

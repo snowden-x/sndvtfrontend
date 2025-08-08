@@ -1,5 +1,5 @@
 import React from 'react'
-import { createRootRoute, Outlet } from '@tanstack/react-router'
+import { createRootRoute, Outlet, useLocation } from '@tanstack/react-router'
 import { TanStackRouterDevtools } from '@tanstack/react-router-devtools'
 import { AppSidebar } from '@/components/app-sidebar'
 import { SiteHeader } from '@/components/site-header'
@@ -45,8 +45,25 @@ const SidebarLayout = React.memo(function SidebarLayout() {
 export const Route = createRootRoute({
   component: () => (
     <AuthProvider>
-      <SidebarLayout />
-      <TanStackRouterDevtools />
+      <RootContent />
+      {import.meta.env.MODE === 'development' && <TanStackRouterDevtools />}
     </AuthProvider>
   ),
 }) 
+
+function RootContent() {
+  const location = useLocation()
+  const isAuthScreen = location.pathname.startsWith('/login')
+
+  if (isAuthScreen) {
+    return (
+      <div className="min-h-screen bg-background">
+        <div className="flex min-h-screen items-center justify-center">
+          <Outlet />
+        </div>
+      </div>
+    )
+  }
+
+  return <SidebarLayout />
+}

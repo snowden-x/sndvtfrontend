@@ -46,7 +46,7 @@ export const NavDocuments = React.memo(function NavDocuments({
     <SidebarGroup className="group-data-[collapsible=icon]:hidden">
       <SidebarGroupLabel>Quick Actions</SidebarGroupLabel>
       <SidebarMenu>
-        {items.map((item) => (
+        {items.length > 0 && items.map((item) => (
           <SidebarMenuItem key={item.name}>
             <SidebarMenuButton asChild>
               <Link 
@@ -91,12 +91,7 @@ export const NavDocuments = React.memo(function NavDocuments({
             </DropdownMenu>
           </SidebarMenuItem>
         ))}
-        <SidebarMenuItem>
-          <SidebarMenuButton className="text-sidebar-foreground/70">
-            <IconDots className="text-sidebar-foreground/70" />
-            <span>More</span>
-          </SidebarMenuButton>
-        </SidebarMenuItem>
+        {/* No fallback when empty; the whole section is hidden by parent */}
       </SidebarMenu>
     </SidebarGroup>
   )

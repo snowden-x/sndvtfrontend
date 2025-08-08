@@ -1,14 +1,15 @@
-import { useState, useEffect, useCallback } from 'react'
+import { useState, useEffect, useCallback, useRef } from 'react'
 import { AlertsList } from './AlertsList'
 import { AlertsStats } from './AlertsStats'
 import { AlertsFilters } from './AlertsFilters'
 import { AlertNotification } from './AlertNotification'
+import { useAuth } from '@/contexts/AuthContext'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 
 import { toast } from 'sonner'
 import { cn } from '@/lib/utils'
 import { alertsService } from '@/services/alerts'
-import type { Alert, AlertStats, AlertFilters } from '@/services/alerts'
+import type { AlertWithUser, AlertStats, AlertFilters } from '@/services/alerts'
 
 // Interfaces now imported from service
 
@@ -27,7 +28,7 @@ export function AlertsManager({
   showTabs = true,
   defaultTab = 'alerts'
 }: AlertsManagerProps) {
-  const [alerts, setAlerts] = useState<Alert[]>([])
+  const [alerts, setAlerts] = useState<AlertWithUser[]>([])
   const [stats, setStats] = useState<AlertStats | null>(null)
   const [filters, setFilters] = useState<AlertFilters>({ hours_back: 24 })
   const [page, setPage] = useState(1)
@@ -37,10 +38,13 @@ export function AlertsManager({
 
   const pageSize = compact ? 10 : 20
 
+  const didInitialSyncRef = useRef(false)
+  const { isAuthenticated, isLoading } = useAuth()
+
   const fetchAlerts = useCallback(async () => {
     setLoading(true)
     try {
-      const response = await alertsService.getAlerts({
+      const response = await alertsService.getAlertsWithUsers({
         ...filters,
         page,
         page_size: pageSize
@@ -125,8 +129,13 @@ export function AlertsManager({
   }
 
   const handleRefresh = () => {
-    fetchAlerts()
-    fetchStats()
+    const refresh = async () => {
+      // Try to sync from NetPredict first
+      await alertsService.syncAlerts()
+      fetchAlerts()
+      fetchStats()
+    }
+    refresh()
   }
 
   const handleExport = () => {
@@ -140,8 +149,19 @@ export function AlertsManager({
   }
 
   useEffect(() => {
+    if (isLoading || !isAuthenticated) return
+    // On first authenticated mount, attempt to sync from NetPredict so DB has freshest alerts
+    if (!didInitialSyncRef.current) {
+      didInitialSyncRef.current = true
+      ;(async () => {
+        await alertsService.syncAlerts()
+        fetchAlerts()
+        fetchStats()
+      })()
+      return
+    }
     fetchAlerts()
-  }, [fetchAlerts])
+  }, [isAuthenticated, isLoading, fetchAlerts, fetchStats])
 
   useEffect(() => {
     fetchStats()
@@ -192,7 +212,7 @@ export function AlertsManager({
 
   return (
     <div className={cn("space-y-6", className)}>
-      <AlertNotification />
+      {import.meta.env.DEV && <AlertNotification />}
       
       <Tabs defaultValue={defaultTab} className="w-full">
         <TabsList>
