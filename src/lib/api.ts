@@ -110,9 +110,10 @@ class ApiClient {
     })
   }
 
-  async delete<T>(endpoint: string): Promise<ApiResponse<T>> {
+  async delete<T>(endpoint: string, data?: any): Promise<ApiResponse<T>> {
     return this.request<T>(endpoint, {
       method: 'DELETE',
+      body: data ? JSON.stringify(data) : undefined,
     })
   }
 }

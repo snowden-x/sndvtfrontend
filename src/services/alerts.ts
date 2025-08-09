@@ -153,7 +153,7 @@ class AlertsService {
    * Delete a specific alert
    */
   async deleteAlert(alertId: string) {
-    return apiClient.delete(`/alerts/${alertId}`)
+    return apiClient.delete(`/alerts/${alertId}`, undefined)
   }
 
   /**
@@ -167,14 +167,14 @@ class AlertsService {
    * Clear all alerts
    */
   async clearAllAlerts() {
-    return apiClient.delete('/alerts/clear/all')
+    return apiClient.delete('/alerts/clear/all', undefined)
   }
 
   /**
    * Clear all acknowledged alerts
    */
   async clearAcknowledgedAlerts() {
-    return apiClient.delete('/alerts/clear/acknowledged')
+    return apiClient.delete('/alerts/clear/acknowledged', undefined)
   }
 
   /**
