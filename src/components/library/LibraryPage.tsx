@@ -270,6 +270,7 @@ export const LibraryPage: React.FC = () => {
             onClick={clearKnowledgeBase}
             variant="destructive"
             className="flex items-center gap-2"
+            title="Remove all embeddings from the knowledge base"
           >
             <Trash2 className="h-4 w-4" />
             Clear Knowledge Base
@@ -278,9 +279,10 @@ export const LibraryPage: React.FC = () => {
             onClick={rebuildKnowledgeBase} 
             disabled={isRebuilding}
             className="flex items-center gap-2"
+            title="Recreate knowledge base from all current documents"
           >
             <RefreshCw className={`h-4 w-4 ${isRebuilding ? 'animate-spin' : ''}`} />
-            {isRebuilding ? 'Rebuilding...' : 'Rebuild Knowledge Base'}
+            {isRebuilding ? 'Rebuilding...' : 'Rebuild From Files'}
           </Button>
         </div>
       </div>

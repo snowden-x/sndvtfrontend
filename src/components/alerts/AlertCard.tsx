@@ -6,7 +6,8 @@ import {
   IconInfoCircle, 
   IconCheck,
   IconClock,
-  IconDevices
+  IconDevices,
+  IconTrash
 } from '@tabler/icons-react'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
@@ -18,6 +19,7 @@ interface AlertCardProps {
   alert: AlertWithUser
   onAcknowledge?: (alertId: string) => void
   onViewDetails?: (alertId: string) => void
+  onDelete?: (alertId: string) => void
   className?: string
   compact?: boolean
 }
@@ -71,6 +73,7 @@ export function AlertCard({
   alert, 
   onAcknowledge, 
   onViewDetails, 
+  onDelete,
   className,
   compact = false 
 }: AlertCardProps) {
@@ -78,6 +81,13 @@ export function AlertCard({
     e.stopPropagation()
     if (onAcknowledge && !alert.acknowledged) {
       onAcknowledge(alert.id)
+    }
+  }
+
+  const handleDelete = (e: React.MouseEvent) => {
+    e.stopPropagation()
+    if (onDelete) {
+      onDelete(alert.id)
     }
   }
 
@@ -113,6 +123,16 @@ export function AlertCard({
           </div>
           
           <div className="flex items-center gap-2">
+            {onDelete && (
+              <Button
+                size="sm"
+                variant="ghost"
+                onClick={handleDelete}
+                className="h-6 px-2 text-xs text-destructive hover:text-destructive hover:bg-destructive/10"
+              >
+                <IconTrash className="h-3 w-3" />
+              </Button>
+            )}
             {alert.acknowledged ? (
               <div className="flex items-center gap-1 text-green-600">
                 <IconCheck className="h-3 w-3" />

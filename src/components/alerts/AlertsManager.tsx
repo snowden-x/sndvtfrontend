@@ -128,6 +128,74 @@ export function AlertsManager({
     console.log('View details for alert:', alertId)
   }
 
+  const handleDelete = async (alertId: string) => {
+    try {
+      const response = await alertsService.deleteAlert(alertId)
+      
+      if (response.error) {
+        throw new Error(response.error)
+      }
+      
+      setAlerts(prev => prev.filter(alert => alert.id !== alertId))
+      toast.success("Alert deleted successfully")
+    } catch (error) {
+      toast.error("Failed to delete alert")
+    }
+  }
+
+  const handleDeleteMultiple = async (alertIds: string[]) => {
+    try {
+      const response = await alertsService.deleteMultipleAlerts(alertIds)
+      
+      if (response.error) {
+        throw new Error(response.error)
+      }
+      
+      setAlerts(prev => prev.filter(alert => !alertIds.includes(alert.id)))
+      toast.success(`${alertIds.length} alert${alertIds.length === 1 ? '' : 's'} deleted successfully`)
+    } catch (error) {
+      toast.error("Failed to delete alerts")
+    }
+  }
+
+  const handleClearAllAlerts = async () => {
+    if (!confirm('Are you sure you want to delete ALL alerts? This action cannot be undone.')) {
+      return
+    }
+    
+    try {
+      const response = await alertsService.clearAllAlerts()
+      
+      if (response.error) {
+        throw new Error(response.error)
+      }
+      
+      setAlerts([])
+      toast.success("All alerts cleared successfully")
+    } catch (error) {
+      toast.error("Failed to clear all alerts")
+    }
+  }
+
+  const handleClearAcknowledgedAlerts = async () => {
+    if (!confirm('Are you sure you want to delete all acknowledged alerts? This action cannot be undone.')) {
+      return
+    }
+    
+    try {
+      const response = await alertsService.clearAcknowledgedAlerts()
+      
+      if (response.error) {
+        throw new Error(response.error)
+      }
+      
+      setAlerts(prev => prev.filter(alert => !alert.acknowledged))
+      toast.success("All acknowledged alerts cleared successfully")
+    } catch (error) {
+      toast.error("Failed to clear acknowledged alerts")
+    }
+  }
+
   const handleRefresh = () => {
     const refresh = async () => {
       // Try to sync from NetPredict first
@@ -185,6 +253,8 @@ export function AlertsManager({
           onFiltersChange={handleFiltersChange}
           onRefresh={handleRefresh}
           onExport={handleExport}
+          onClearAll={handleClearAllAlerts}
+          onClearAcknowledged={handleClearAcknowledgedAlerts}
           loading={loading}
         />
         
@@ -203,6 +273,8 @@ export function AlertsManager({
           onAcknowledge={handleAcknowledge}
           onAcknowledgeMultiple={handleAcknowledgeMultiple}
           onViewDetails={handleViewDetails}
+          onDelete={handleDelete}
+          onDeleteMultiple={handleDeleteMultiple}
           compact={compact}
           selectable={true}
         />
@@ -226,6 +298,8 @@ export function AlertsManager({
             onFiltersChange={handleFiltersChange}
             onRefresh={handleRefresh}
             onExport={handleExport}
+            onClearAll={handleClearAllAlerts}
+            onClearAcknowledged={handleClearAcknowledgedAlerts}
             loading={loading}
           />
           
@@ -240,6 +314,8 @@ export function AlertsManager({
             onAcknowledge={handleAcknowledge}
             onAcknowledgeMultiple={handleAcknowledgeMultiple}
             onViewDetails={handleViewDetails}
+            onDelete={handleDelete}
+            onDeleteMultiple={handleDeleteMultiple}
             compact={compact}
             selectable={true}
           />
@@ -252,6 +328,8 @@ export function AlertsManager({
               filters={{ hours_back: filters.hours_back }}
               onFiltersChange={(newFilters) => setFilters(prev => ({ ...prev, ...newFilters }))}
               onRefresh={handleRefresh}
+              onClearAll={handleClearAllAlerts}
+              onClearAcknowledged={handleClearAcknowledgedAlerts}
               loading={statsLoading}
               className="flex-shrink-0"
             />

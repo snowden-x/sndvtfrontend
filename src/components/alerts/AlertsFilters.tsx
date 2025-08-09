@@ -3,7 +3,9 @@ import {
   IconFilter, 
   IconX, 
   IconRefresh,
-  IconDownload
+  IconDownload,
+  IconTrash,
+  IconTrashX
 } from '@tabler/icons-react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -20,6 +22,13 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from '@/components/ui/popover'
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu'
 import { Checkbox } from '@/components/ui/checkbox'
 import { Badge } from '@/components/ui/badge'
 import { cn } from '@/lib/utils'
@@ -36,6 +45,8 @@ interface AlertsFiltersProps {
   onFiltersChange: (filters: AlertFilters) => void
   onRefresh?: () => void
   onExport?: () => void
+  onClearAll?: () => void
+  onClearAcknowledged?: () => void
   loading?: boolean
   className?: string
 }
@@ -61,6 +72,8 @@ export function AlertsFilters({
   onFiltersChange, 
   onRefresh,
   onExport,
+  onClearAll,
+  onClearAcknowledged,
   loading = false,
   className 
 }: AlertsFiltersProps) {
@@ -226,6 +239,42 @@ export function AlertsFilters({
 
       {/* Action buttons */}
       <div className="flex items-center gap-2 ml-auto">
+        {/* Clear alerts dropdown */}
+        {(onClearAll || onClearAcknowledged) && (
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button
+                variant="outline"
+                size="sm"
+                className="text-destructive hover:text-destructive hover:bg-destructive/10"
+              >
+                <IconTrash className="h-4 w-4 mr-2" />
+                Clear
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end">
+              {onClearAcknowledged && (
+                <DropdownMenuItem onClick={onClearAcknowledged}>
+                  <IconTrashX className="h-4 w-4 mr-2" />
+                  Clear Acknowledged
+                </DropdownMenuItem>
+              )}
+              {onClearAll && (
+                <>
+                  {onClearAcknowledged && <DropdownMenuSeparator />}
+                  <DropdownMenuItem 
+                    onClick={onClearAll}
+                    className="text-destructive focus:text-destructive"
+                  >
+                    <IconTrash className="h-4 w-4 mr-2" />
+                    Clear All Alerts
+                  </DropdownMenuItem>
+                </>
+              )}
+            </DropdownMenuContent>
+          </DropdownMenu>
+        )}
+
         {onRefresh && (
           <Button
             variant="outline"

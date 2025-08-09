@@ -6,7 +6,7 @@ import {
   IconChevronLeft, 
   IconChevronRight, 
   IconCheck,
-
+  IconTrash,
 } from '@tabler/icons-react'
 import { cn } from '@/lib/utils'
 import type { AlertWithUser } from '@/services/alerts'
@@ -22,6 +22,8 @@ interface AlertsListProps {
   onAcknowledge?: (alertId: string) => void
   onAcknowledgeMultiple?: (alertIds: string[]) => void
   onViewDetails?: (alertId: string) => void
+  onDelete?: (alertId: string) => void
+  onDeleteMultiple?: (alertIds: string[]) => void
   className?: string
   compact?: boolean
   selectable?: boolean
@@ -38,6 +40,8 @@ export function AlertsList({
   onAcknowledge,
   onAcknowledgeMultiple,
   onViewDetails,
+  onDelete,
+  onDeleteMultiple,
   className,
   compact = false,
   selectable = false
@@ -68,6 +72,13 @@ export function AlertsList({
   const handleAcknowledgeSelected = () => {
     if (onAcknowledgeMultiple && selectedAlerts.size > 0) {
       onAcknowledgeMultiple(Array.from(selectedAlerts))
+      setSelectedAlerts(new Set())
+    }
+  }
+
+  const handleDeleteSelected = () => {
+    if (onDeleteMultiple && selectedAlerts.size > 0) {
+      onDeleteMultiple(Array.from(selectedAlerts))
       setSelectedAlerts(new Set())
     }
   }
@@ -118,14 +129,25 @@ export function AlertsList({
           </span>
           
           {selectedAlerts.size > 0 && (
-            <Button
-              size="sm"
-              onClick={handleAcknowledgeSelected}
-              className="ml-auto"
-            >
-              <IconCheck className="h-4 w-4 mr-2" />
-              Acknowledge Selected
-            </Button>
+            <div className="flex items-center gap-2 ml-auto">
+              <Button
+                size="sm"
+                onClick={handleAcknowledgeSelected}
+              >
+                <IconCheck className="h-4 w-4 mr-2" />
+                Acknowledge Selected
+              </Button>
+              {onDeleteMultiple && (
+                <Button
+                  size="sm"
+                  variant="destructive"
+                  onClick={handleDeleteSelected}
+                >
+                  <IconTrash className="h-4 w-4 mr-2" />
+                  Delete Selected
+                </Button>
+              )}
+            </div>
           )}
         </div>
       )}
@@ -147,6 +169,7 @@ export function AlertsList({
               alert={alert}
               onAcknowledge={onAcknowledge}
               onViewDetails={onViewDetails}
+              onDelete={onDelete}
               compact={compact}
               className="flex-1"
             />

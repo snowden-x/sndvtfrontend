@@ -150,6 +150,34 @@ class AlertsService {
   }
 
   /**
+   * Delete a specific alert
+   */
+  async deleteAlert(alertId: string) {
+    return apiClient.delete(`/alerts/${alertId}`)
+  }
+
+  /**
+   * Delete multiple alerts
+   */
+  async deleteMultipleAlerts(alertIds: string[]) {
+    return apiClient.delete('/alerts', { alert_ids: alertIds })
+  }
+
+  /**
+   * Clear all alerts
+   */
+  async clearAllAlerts() {
+    return apiClient.delete('/alerts/clear/all')
+  }
+
+  /**
+   * Clear all acknowledged alerts
+   */
+  async clearAcknowledgedAlerts() {
+    return apiClient.delete('/alerts/clear/acknowledged')
+  }
+
+  /**
    * Enrich alerts with user information
    */
   async enrichAlertsWithUsers(alerts: Alert[]): Promise<AlertWithUser[]> {
