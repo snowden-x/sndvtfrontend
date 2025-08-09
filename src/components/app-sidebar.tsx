@@ -7,6 +7,7 @@ import {
   IconAlertTriangle,
   IconNetwork,
   IconActivity,
+  IconLibrary,
 } from "@tabler/icons-react"
 
 import { NavDocuments } from "@/components/nav-documents"
@@ -43,13 +44,18 @@ const sidebarData = {
       icon: IconAlertTriangle,
     },
     {
+      title: "Library",
+      url: "/library",
+      icon: IconLibrary,
+    },
+    {
       title: "Network Tools",
       url: "/network",
       icon: IconNetwork,
       items: [
         {
-          title: "AI Troubleshooting",
-          url: "/network/chat",
+          title: "Documentation Chat",
+          url: "/network/rag-chat",
         },
         {
           title: "Device Management",

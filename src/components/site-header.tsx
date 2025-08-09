@@ -11,6 +11,25 @@ import { useAuth } from "@/contexts/AuthContext"
 function getPageTitle(pathname: string): string {
   if (pathname === '/dashboard' || pathname === '/') return 'Dashboard'
   
+  // Network section
+  if (pathname.startsWith('/network')) {
+    if (pathname === '/network/devices') return 'Network Tools'
+    if (pathname === '/network/rag-chat') return 'Documentation Chat'
+    return 'Network'
+  }
+  
+  // Alerts section
+  if (pathname.startsWith('/alerts')) return 'Alerts'
+  
+  // Admin section
+  if (pathname.startsWith('/admin')) return 'Admin'
+  
+  // Chat section
+  if (pathname.startsWith('/chat')) return 'Chat'
+  
+  // Debug section
+  if (pathname.startsWith('/debug')) return 'Debug'
+  
   // Fallback: capitalize first letter of the path segment
   const segments = pathname.split('/').filter(Boolean)
   return segments[segments.length - 1]?.charAt(0).toUpperCase() + segments[segments.length - 1]?.slice(1) || 'SNDVT Monitor'

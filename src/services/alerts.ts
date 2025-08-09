@@ -3,7 +3,7 @@
  */
 
 import { apiClient } from '@/lib/api'
-import { usersService, type User } from './users'
+import { usersService } from './users'
 
 export interface Alert {
   id: string

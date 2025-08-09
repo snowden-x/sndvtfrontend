@@ -3,7 +3,6 @@
  */
 
 import { alertsService } from '@/services/alerts'
-import { networkAgentService } from '@/services/network-agent'
 
 export interface ServiceHealthCheck {
   service: string
@@ -41,34 +40,7 @@ export async function testAlertsService(): Promise<ServiceHealthCheck> {
   }
 }
 
-export async function testNetworkAgentService(): Promise<ServiceHealthCheck> {
-  try {
-    const response = await networkAgentService.checkHealth()
-    
-    if (response.error) {
-      return {
-        service: 'Network Agent',
-        status: 'unhealthy',
-        message: response.error,
-        timestamp: new Date().toISOString()
-      }
-    }
 
-    return {
-      service: 'Network Agent',
-      status: 'healthy',
-      message: 'Connected successfully',
-      timestamp: new Date().toISOString()
-    }
-  } catch (error) {
-    return {
-      service: 'Network Agent',
-      status: 'unhealthy',
-      message: error instanceof Error ? error.message : 'Unknown error',
-      timestamp: new Date().toISOString()
-    }
-  }
-}
 
 export async function testMainAPI(): Promise<ServiceHealthCheck> {
   try {
@@ -104,7 +76,7 @@ export async function runAllHealthChecks(): Promise<ServiceHealthCheck[]> {
   const results = await Promise.allSettled([
     testMainAPI(),
     testAlertsService(),
-    testNetworkAgentService()
+    // testNetworkAgentService()
   ])
 
   return results.map((result, index) => {

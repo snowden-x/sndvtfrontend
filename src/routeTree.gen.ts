@@ -12,13 +12,14 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as AuthenticatedRouteImport } from './routes/_authenticated'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as AuthenticatedLibraryRouteImport } from './routes/_authenticated/library'
 import { Route as AuthenticatedDebugRouteImport } from './routes/_authenticated/debug'
 import { Route as AuthenticatedDashboardRouteImport } from './routes/_authenticated/dashboard'
 import { Route as AuthenticatedNetworkRouteRouteImport } from './routes/_authenticated/network/route'
 import { Route as AuthenticatedAlertsRouteRouteImport } from './routes/_authenticated/alerts/route'
 import { Route as AuthenticatedAlertsIndexRouteImport } from './routes/_authenticated/alerts/index'
+import { Route as AuthenticatedNetworkRagChatRouteImport } from './routes/_authenticated/network/rag-chat'
 import { Route as AuthenticatedNetworkDevicesRouteImport } from './routes/_authenticated/network/devices'
-import { Route as AuthenticatedNetworkChatRouteImport } from './routes/_authenticated/network/chat'
 import { Route as AuthenticatedAlertsAlertIdRouteImport } from './routes/_authenticated/alerts/$alertId'
 import { Route as AuthenticatedAdminUsersRouteImport } from './routes/_authenticated/admin/users'
 
@@ -35,6 +36,11 @@ const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
+} as any)
+const AuthenticatedLibraryRoute = AuthenticatedLibraryRouteImport.update({
+  id: '/library',
+  path: '/library',
+  getParentRoute: () => AuthenticatedRoute,
 } as any)
 const AuthenticatedDebugRoute = AuthenticatedDebugRouteImport.update({
   id: '/debug',
@@ -64,16 +70,16 @@ const AuthenticatedAlertsIndexRoute =
     path: '/',
     getParentRoute: () => AuthenticatedAlertsRouteRoute,
   } as any)
+const AuthenticatedNetworkRagChatRoute =
+  AuthenticatedNetworkRagChatRouteImport.update({
+    id: '/rag-chat',
+    path: '/rag-chat',
+    getParentRoute: () => AuthenticatedNetworkRouteRoute,
+  } as any)
 const AuthenticatedNetworkDevicesRoute =
   AuthenticatedNetworkDevicesRouteImport.update({
     id: '/devices',
     path: '/devices',
-    getParentRoute: () => AuthenticatedNetworkRouteRoute,
-  } as any)
-const AuthenticatedNetworkChatRoute =
-  AuthenticatedNetworkChatRouteImport.update({
-    id: '/chat',
-    path: '/chat',
     getParentRoute: () => AuthenticatedNetworkRouteRoute,
   } as any)
 const AuthenticatedAlertsAlertIdRoute =
@@ -95,10 +101,11 @@ export interface FileRoutesByFullPath {
   '/network': typeof AuthenticatedNetworkRouteRouteWithChildren
   '/dashboard': typeof AuthenticatedDashboardRoute
   '/debug': typeof AuthenticatedDebugRoute
+  '/library': typeof AuthenticatedLibraryRoute
   '/admin/users': typeof AuthenticatedAdminUsersRoute
   '/alerts/$alertId': typeof AuthenticatedAlertsAlertIdRoute
-  '/network/chat': typeof AuthenticatedNetworkChatRoute
   '/network/devices': typeof AuthenticatedNetworkDevicesRoute
+  '/network/rag-chat': typeof AuthenticatedNetworkRagChatRoute
   '/alerts/': typeof AuthenticatedAlertsIndexRoute
 }
 export interface FileRoutesByTo {
@@ -107,10 +114,11 @@ export interface FileRoutesByTo {
   '/network': typeof AuthenticatedNetworkRouteRouteWithChildren
   '/dashboard': typeof AuthenticatedDashboardRoute
   '/debug': typeof AuthenticatedDebugRoute
+  '/library': typeof AuthenticatedLibraryRoute
   '/admin/users': typeof AuthenticatedAdminUsersRoute
   '/alerts/$alertId': typeof AuthenticatedAlertsAlertIdRoute
-  '/network/chat': typeof AuthenticatedNetworkChatRoute
   '/network/devices': typeof AuthenticatedNetworkDevicesRoute
+  '/network/rag-chat': typeof AuthenticatedNetworkRagChatRoute
   '/alerts': typeof AuthenticatedAlertsIndexRoute
 }
 export interface FileRoutesById {
@@ -122,10 +130,11 @@ export interface FileRoutesById {
   '/_authenticated/network': typeof AuthenticatedNetworkRouteRouteWithChildren
   '/_authenticated/dashboard': typeof AuthenticatedDashboardRoute
   '/_authenticated/debug': typeof AuthenticatedDebugRoute
+  '/_authenticated/library': typeof AuthenticatedLibraryRoute
   '/_authenticated/admin/users': typeof AuthenticatedAdminUsersRoute
   '/_authenticated/alerts/$alertId': typeof AuthenticatedAlertsAlertIdRoute
-  '/_authenticated/network/chat': typeof AuthenticatedNetworkChatRoute
   '/_authenticated/network/devices': typeof AuthenticatedNetworkDevicesRoute
+  '/_authenticated/network/rag-chat': typeof AuthenticatedNetworkRagChatRoute
   '/_authenticated/alerts/': typeof AuthenticatedAlertsIndexRoute
 }
 export interface FileRouteTypes {
@@ -137,10 +146,11 @@ export interface FileRouteTypes {
     | '/network'
     | '/dashboard'
     | '/debug'
+    | '/library'
     | '/admin/users'
     | '/alerts/$alertId'
-    | '/network/chat'
     | '/network/devices'
+    | '/network/rag-chat'
     | '/alerts/'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -149,10 +159,11 @@ export interface FileRouteTypes {
     | '/network'
     | '/dashboard'
     | '/debug'
+    | '/library'
     | '/admin/users'
     | '/alerts/$alertId'
-    | '/network/chat'
     | '/network/devices'
+    | '/network/rag-chat'
     | '/alerts'
   id:
     | '__root__'
@@ -163,10 +174,11 @@ export interface FileRouteTypes {
     | '/_authenticated/network'
     | '/_authenticated/dashboard'
     | '/_authenticated/debug'
+    | '/_authenticated/library'
     | '/_authenticated/admin/users'
     | '/_authenticated/alerts/$alertId'
-    | '/_authenticated/network/chat'
     | '/_authenticated/network/devices'
+    | '/_authenticated/network/rag-chat'
     | '/_authenticated/alerts/'
   fileRoutesById: FileRoutesById
 }
@@ -198,6 +210,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
+    }
+    '/_authenticated/library': {
+      id: '/_authenticated/library'
+      path: '/library'
+      fullPath: '/library'
+      preLoaderRoute: typeof AuthenticatedLibraryRouteImport
+      parentRoute: typeof AuthenticatedRoute
     }
     '/_authenticated/debug': {
       id: '/_authenticated/debug'
@@ -234,18 +253,18 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedAlertsIndexRouteImport
       parentRoute: typeof AuthenticatedAlertsRouteRoute
     }
+    '/_authenticated/network/rag-chat': {
+      id: '/_authenticated/network/rag-chat'
+      path: '/rag-chat'
+      fullPath: '/network/rag-chat'
+      preLoaderRoute: typeof AuthenticatedNetworkRagChatRouteImport
+      parentRoute: typeof AuthenticatedNetworkRouteRoute
+    }
     '/_authenticated/network/devices': {
       id: '/_authenticated/network/devices'
       path: '/devices'
       fullPath: '/network/devices'
       preLoaderRoute: typeof AuthenticatedNetworkDevicesRouteImport
-      parentRoute: typeof AuthenticatedNetworkRouteRoute
-    }
-    '/_authenticated/network/chat': {
-      id: '/_authenticated/network/chat'
-      path: '/chat'
-      fullPath: '/network/chat'
-      preLoaderRoute: typeof AuthenticatedNetworkChatRouteImport
       parentRoute: typeof AuthenticatedNetworkRouteRoute
     }
     '/_authenticated/alerts/$alertId': {
@@ -282,14 +301,14 @@ const AuthenticatedAlertsRouteRouteWithChildren =
   )
 
 interface AuthenticatedNetworkRouteRouteChildren {
-  AuthenticatedNetworkChatRoute: typeof AuthenticatedNetworkChatRoute
   AuthenticatedNetworkDevicesRoute: typeof AuthenticatedNetworkDevicesRoute
+  AuthenticatedNetworkRagChatRoute: typeof AuthenticatedNetworkRagChatRoute
 }
 
 const AuthenticatedNetworkRouteRouteChildren: AuthenticatedNetworkRouteRouteChildren =
   {
-    AuthenticatedNetworkChatRoute: AuthenticatedNetworkChatRoute,
     AuthenticatedNetworkDevicesRoute: AuthenticatedNetworkDevicesRoute,
+    AuthenticatedNetworkRagChatRoute: AuthenticatedNetworkRagChatRoute,
   }
 
 const AuthenticatedNetworkRouteRouteWithChildren =
@@ -302,6 +321,7 @@ interface AuthenticatedRouteChildren {
   AuthenticatedNetworkRouteRoute: typeof AuthenticatedNetworkRouteRouteWithChildren
   AuthenticatedDashboardRoute: typeof AuthenticatedDashboardRoute
   AuthenticatedDebugRoute: typeof AuthenticatedDebugRoute
+  AuthenticatedLibraryRoute: typeof AuthenticatedLibraryRoute
   AuthenticatedAdminUsersRoute: typeof AuthenticatedAdminUsersRoute
 }
 
@@ -310,6 +330,7 @@ const AuthenticatedRouteChildren: AuthenticatedRouteChildren = {
   AuthenticatedNetworkRouteRoute: AuthenticatedNetworkRouteRouteWithChildren,
   AuthenticatedDashboardRoute: AuthenticatedDashboardRoute,
   AuthenticatedDebugRoute: AuthenticatedDebugRoute,
+  AuthenticatedLibraryRoute: AuthenticatedLibraryRoute,
   AuthenticatedAdminUsersRoute: AuthenticatedAdminUsersRoute,
 }
 
